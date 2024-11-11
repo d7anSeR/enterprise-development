@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaLibrary.Classes", "Med
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaLibrary.Tests", "MediaLibrary.Tests\MediaLibrary.Tests.csproj", "{30CD50B3-527F-4C13-8EE4-E6D72E733E34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{ADB933CA-FBCF-40F1-8375-1FA393BFAFF2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{30CD50B3-527F-4C13-8EE4-E6D72E733E34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30CD50B3-527F-4C13-8EE4-E6D72E733E34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30CD50B3-527F-4C13-8EE4-E6D72E733E34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADB933CA-FBCF-40F1-8375-1FA393BFAFF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADB933CA-FBCF-40F1-8375-1FA393BFAFF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADB933CA-FBCF-40F1-8375-1FA393BFAFF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADB933CA-FBCF-40F1-8375-1FA393BFAFF2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
