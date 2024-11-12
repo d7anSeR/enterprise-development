@@ -1,4 +1,7 @@
-﻿namespace MediaLibrary.Classes.Repositories;
+﻿using MediaLibrary.Classes.IRepositories;
+
+namespace MediaLibrary.Classes.Repositories;
+
 public class RepositoryAlbum : IRepositoryAlbum
 {
     private readonly List<Album> albums = [];
@@ -30,18 +33,6 @@ public class RepositoryAlbum : IRepositoryAlbum
     }
 
     public bool Put(int id, Album album)
-    {
-        var oldValue = Get(id);
-        if (oldValue == null)
-            return false;
-        oldValue.Id = album.Id;
-        oldValue.Release = album.Release;
-        oldValue.Title = album.Title;
-        oldValue.IdArtist = album.IdArtist;
-        return true;
-    }
-
-    public bool Update(int id, Album album)
     {
         var oldValue = Get(id);
         if (oldValue == null)

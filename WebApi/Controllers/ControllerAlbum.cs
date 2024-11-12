@@ -1,26 +1,23 @@
-﻿using AutoMapper;
-using MediaLibrary.Classes;
-using MediaLibrary.Classes.Repositories;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Dto;
-
+using MediaLibrary.Classes;
 
 namespace WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ControllerAlbum(IRepositoryAlbum repository, IMapper mapper) : ControllerBase
+public class ControllerAlbum(IServiceAlbum _albumService) : ControllerBase
 {
     [HttpGet]
     public ActionResult<IEnumerable<Album>> Get()
     {
-        return Ok(repository.GetEnum());
+        return Ok(_albumService.GetEnum());
     }
 
     [HttpGet("{id}")]
     public ActionResult<Album> Get(int id)
     {
-        var album = repository.Get(id);
+        var album = _albumService.Get(id);
         if (album == null)
             return NotFound();
         return Ok(album);
@@ -29,21 +26,18 @@ public class ControllerAlbum(IRepositoryAlbum repository, IMapper mapper) : Cont
     [HttpPost]
     public IActionResult Post([FromBody] DtoAlbum album)
     {
-        var _album = mapper.Map<Album>(album);
-        return repository.Post(_album) ? Ok() : BadRequest();
+        return _albumService.Post(album) ? Ok() : BadRequest();
     }
 
     [HttpPut("{id}")]
     public IActionResult Put(int id, [FromBody] DtoAlbum album)
     {
-        var _album = mapper.Map<Album>(album);
-        _album.Id = id;
-        return repository.Put(id, _album) ? Ok() : NotFound();
+        return _albumService.Put(id, album) ? Ok() : NotFound();
     }
 
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        return repository.Delete(id) ? Ok() : NotFound();
+        return _albumService.Delete(id) ? Ok() : NotFound();
     }
 }
