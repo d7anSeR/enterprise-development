@@ -4,6 +4,9 @@ using WebApi.Dto;
 
 namespace WebApi;
 
+/// <summary>
+/// Профиль маппинга для AutoMapper, используемый для настройки преобразований между объектами
+/// </summary>
 public class Mapping: Profile
 {
     public Mapping()
@@ -12,6 +15,5 @@ public class Mapping: Profile
         CreateMap<Artist, DtoArtist>().ReverseMap();
         CreateMap<Genre, DtoGenre>().ReverseMap();
         CreateMap<Track, DtoTrack>().ReverseMap();
-        CreateMap<ParticipationArtistGenre, DtoParticipationArtistGenre>().ReverseMap();
     }
 }

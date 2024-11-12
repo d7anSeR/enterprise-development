@@ -2,14 +2,37 @@
 
 namespace MediaLibrary.Classes.Repositories;
 
+/// <summary>
+/// Имплементация интерфейса артиста
+/// </summary>
 public class RepositoryArtist : IRepositoryArtist
 {
+    /// <summary>
+    /// Список всех артистов
+    /// </summary>
     private readonly List<Artist> artists = [];
+    /// <summary>
+    /// Идентификатор артиста
+    /// </summary>
     private int artistId = 1;
+    /// <summary>
+    /// Реализация получения списка всех артистов
+    /// </summary>
+    /// <returns></returns>
     public IEnumerable<Artist> GetEnum() => artists;
 
+    /// <summary>
+    /// Реализация получения информации об артисте
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public Artist? Get(int id) => artists.Find(a => a.Id == id);
 
+    /// <summary>
+    /// Реализация удаления артиста из списка
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public bool Delete(int id)
     {
         var artist = Get(id);
@@ -21,6 +44,11 @@ public class RepositoryArtist : IRepositoryArtist
         return false;
     }
 
+    /// <summary>
+    /// Реализация добавления артиста в список
+    /// </summary>
+    /// <param name="artist"></param>
+    /// <returns></returns>
     public bool Post(Artist artist)
     {
         artist.Id = artistId++;
@@ -32,6 +60,12 @@ public class RepositoryArtist : IRepositoryArtist
         return false;
     }
 
+    /// <summary>
+    /// Реализация изменения данных об артисте
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="artist"></param>
+    /// <returns></returns>
     public bool Put(int id, Artist artist)
     {
         var oldValue = Get(id);

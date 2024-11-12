@@ -1,5 +1,8 @@
 ﻿namespace WebApi.Dto;
 
+/// <summary>
+/// Объект передачи данных для артиста
+/// </summary>
 public class DtoArtist
 {
     /// <summary>

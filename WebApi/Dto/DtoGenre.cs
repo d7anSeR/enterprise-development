@@ -1,5 +1,8 @@
 ﻿namespace WebApi.Dto;
 
+/// <summary>
+/// Объект передачи данных для жанра музыки
+/// </summary>
 public class DtoGenre
 {
     /// <summary>

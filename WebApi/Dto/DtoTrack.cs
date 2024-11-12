@@ -1,5 +1,8 @@
 ﻿namespace WebApi.Dto;
 
+/// <summary>
+/// Объект передачи данных для музыкального трека
+/// </summary>
 public class DtoTrack
 {
     /// <summary>
