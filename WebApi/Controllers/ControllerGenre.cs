@@ -1,29 +1,33 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Dto;
 using MediaLibrary.Classes;
+using AutoMapper;
 
 namespace WebApi.Controllers;
 
 /// <summary>
-/// Контроллер для работы с жанрами музыки
+/// Контроллер для работы с музыкальными жанрами
 /// </summary>
 /// <param name="_genreService"></param>
+/// <param name="_mapper"></param>
 [Route("api/[controller]")]
 [ApiController]
-public class ControllerGenre(IServiceGenre _genreService) : ControllerBase
+public class ControllerGenre(IServiceGenre _genreService, IMapper _mapper) : ControllerBase
 {
     /// <summary>
-    /// Получение списка всех жанров
+    /// Получения списка всех жанров
     /// </summary>
     /// <returns></returns>
     [HttpGet]
     public ActionResult<IEnumerable<Genre>> Get()
     {
-        return Ok(_genreService.GetEnum());
+        var genres = _genreService.GetEnum();
+        var genresDtos = _mapper.Map<IEnumerable<DtoGenreDetails>>(genres);
+        return Ok(genresDtos);
     }
 
     /// <summary>
-    /// Получение данных о жанре музыки 
+    /// Получение данных о жанре
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
@@ -33,34 +37,45 @@ public class ControllerGenre(IServiceGenre _genreService) : ControllerBase
         var genre = _genreService.Get(id);
         if (genre == null)
             return NotFound();
-        return Ok(genre);
+        var genreDto = _mapper.Map<DtoGenreDetails>(genre);
+        return Ok(genreDto);
     }
 
     /// <summary>
-    /// Добавление жанра в список
+    /// Добавление жарна в список
     /// </summary>
     /// <param name="genre"></param>
     /// <returns></returns>
     [HttpPost]
-    public IActionResult Post([FromBody] DtoGenre genre)
+    public IActionResult Post([FromBody] DtoGenreCreateUpdate genre)
     {
-        return _genreService.Post(genre) ? Ok() : BadRequest();
+        if (_genreService.Post(genre))
+        {
+            return CreatedAtAction(nameof(Get), genre);
+        }
+        return BadRequest();
     }
 
     /// <summary>
-    /// Изменение жанра музыки
+    /// Изменение жанра
     /// </summary>
     /// <param name="id"></param>
     /// <param name="genre"></param>
     /// <returns></returns>
     [HttpPut("{id}")]
-    public IActionResult Put(int id, [FromBody] DtoGenre genre)
+    public IActionResult Put(int id, [FromBody] DtoGenreCreateUpdate genre)
     {
-        return _genreService.Put(id, genre) ? Ok() : NotFound();
+        if (_genreService.Put(id, genre))
+        {
+            var updatedGenreDto = _mapper.Map<DtoGenreDetails>(genre);
+            updatedGenreDto.Id = id;
+            return CreatedAtAction(nameof(Get), updatedGenreDto);
+        }
+        return NotFound();
     }
 
     /// <summary>
-    /// Удаление жанра музыки
+    /// Удаление жанра
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>

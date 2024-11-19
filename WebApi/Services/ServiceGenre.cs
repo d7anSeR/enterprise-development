@@ -3,50 +3,39 @@ using MediaLibrary.Classes;
 using MediaLibrary.Classes.IRepositories;
 using WebApi.Dto;
 
-/// <summary>
-/// Имплементация интерфейса сервиса для управления музыкальными жанрами
-/// </summary>
-/// <param name="repository"></param>
-/// <param name="mapper"></param>
 public class ServiceGenre(IRepositoryGenre repository, IMapper mapper) : IServiceGenre
 {
     /// <summary>
-    /// Реализация получения списка всех жанров музыки
+    /// Получение списка всех жанров
     /// </summary>
-    /// <returns></returns>
-    public IEnumerable<Genre> GetEnum()
+    public IEnumerable<DtoGenreDetails> GetEnum()
     {
-        return repository.GetEnum();
+        var genres = repository.GetEnum();
+        return mapper.Map<IEnumerable<DtoGenreDetails>>(genres);
     }
 
     /// <summary>
-    /// Реализация получения данных о жанре
+    /// Получение данных о жанре
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public Genre? Get(int id)
+    public DtoGenreDetails? Get(int id)
     {
-        return repository.Get(id);
+        var genre = repository.Get(id);
+        return genre == null ? null : mapper.Map<DtoGenreDetails>(genre);
     }
 
     /// <summary>
-    /// Реализация добавления жанра в список
+    /// Добавление жанра в список
     /// </summary>
-    /// <param name="dtoGenre"></param>
-    /// <returns></returns>
-    public bool Post(DtoGenre dtoGenre)
+    public bool Post(DtoGenreCreateUpdate dtoGenre)
     {
         var genre = mapper.Map<Genre>(dtoGenre);
         return repository.Post(genre);
     }
 
     /// <summary>
-    /// Реализация изменения данных жанра
+    /// Изменение данных жанра
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="dtoGenre"></param>
-    /// <returns></returns>
-    public bool Put(int id, DtoGenre dtoGenre)
+    public bool Put(int id, DtoGenreCreateUpdate dtoGenre)
     {
         var genre = mapper.Map<Genre>(dtoGenre);
         genre.Id = id;
@@ -54,20 +43,16 @@ public class ServiceGenre(IRepositoryGenre repository, IMapper mapper) : IServic
     }
 
     /// <summary>
-    /// Реализация удаления жанра
+    /// Удаление жанра
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
     public bool Delete(int id)
     {
         return repository.Delete(id);
     }
 
     /// <summary>
-    /// Реализация проверки существования жанра
+    /// Проверка существования жанра
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
     public bool GenreExists(int id)
     {
         return repository.Get(id) != null;

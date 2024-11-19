@@ -3,7 +3,7 @@
 /// <summary>
 /// Объект передачи данных для артиста
 /// </summary>
-public class DtoArtist
+public class DtoArtistCreateUpdate
 {
     /// <summary>
     /// Никнейм артиста

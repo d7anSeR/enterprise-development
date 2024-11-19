@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Dto;
 using MediaLibrary.Classes;
+using AutoMapper;
 
 namespace WebApi.Controllers;
 
@@ -8,18 +9,21 @@ namespace WebApi.Controllers;
 /// Контроллер для работы с музыкальными треками
 /// </summary>
 /// <param name="_trackService"></param>
+/// <param name="_mapper"></param>
 [Route("api/[controller]")]
 [ApiController]
-public class ControllerTrack(IServiceTrack _trackService) : ControllerBase
+public class ControllerTrack(IServiceTrack _trackService, IMapper _mapper) : ControllerBase
 {
     /// <summary>
-    /// Получение списка всех музыкальных треков
+    /// Получения списка всех треков
     /// </summary>
     /// <returns></returns>
     [HttpGet]
     public ActionResult<IEnumerable<Track>> Get()
     {
-        return Ok(_trackService.GetEnum());
+        var tracks = _trackService.GetEnum();
+        var tracksDtos = _mapper.Map<IEnumerable<DtoTrackDetails>>(tracks);
+        return Ok(tracksDtos);
     }
 
     /// <summary>
@@ -33,7 +37,8 @@ public class ControllerTrack(IServiceTrack _trackService) : ControllerBase
         var track = _trackService.Get(id);
         if (track == null)
             return NotFound();
-        return Ok(track);
+        var trackDto = _mapper.Map<DtoTrackDetails>(track);
+        return Ok(trackDto);
     }
 
     /// <summary>
@@ -42,21 +47,31 @@ public class ControllerTrack(IServiceTrack _trackService) : ControllerBase
     /// <param name="track"></param>
     /// <returns></returns>
     [HttpPost]
-    public IActionResult Post([FromBody] DtoTrack track)
+    public IActionResult Post([FromBody] DtoTrackCreateUpdate track)
     {
-        return _trackService.Post(track) ? Ok() : BadRequest();
+        if (_trackService.Post(track))
+        {
+            return CreatedAtAction(nameof(Get), track);
+        }
+        return BadRequest();
     }
 
     /// <summary>
-    /// Изменение данных трека
+    /// Изменение трека
     /// </summary>
     /// <param name="id"></param>
     /// <param name="track"></param>
     /// <returns></returns>
     [HttpPut("{id}")]
-    public IActionResult Put(int id, [FromBody] DtoTrack track)
+    public IActionResult Put(int id, [FromBody] DtoTrackCreateUpdate track)
     {
-        return _trackService.Put(id, track) ? Ok() : NotFound();
+        if (_trackService.Put(id, track))
+        {
+            var updatedTrackDto = _mapper.Map<DtoTrackDetails>(track);
+            updatedTrackDto.Id = id;
+            return CreatedAtAction(nameof(Get), updatedTrackDto);
+        }
+        return NotFound();
     }
 
     /// <summary>

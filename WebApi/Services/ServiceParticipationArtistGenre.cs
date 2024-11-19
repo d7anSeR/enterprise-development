@@ -1,5 +1,7 @@
-﻿using MediaLibrary.Classes;
+﻿using AutoMapper;
+using MediaLibrary.Classes;
 using MediaLibrary.Classes.IRepositories;
+using WebApi.Dto;
 
 /// <summary>
 /// Имплементация интерфейса сервиса для управления связями между артистом и жанром музыки
@@ -7,15 +9,17 @@ using MediaLibrary.Classes.IRepositories;
 /// <param name="repository"></param>
 /// <param name="serviceArtist"></param>
 /// <param name="serviceGenre"></param>
-public class ServiceParticipationArtistGenre(IRepositoryParticipationArtistGenre repository, IServiceArtist serviceArtist, IServiceGenre serviceGenre) : IServiceParticipationArtistGenre
+/// <param name="mapper"></param>
+public class ServiceParticipationArtistGenre(IRepositoryParticipationArtistGenre repository, IServiceArtist serviceArtist, IServiceGenre serviceGenre, IMapper mapper) : IServiceParticipationArtistGenre
 {
     /// <summary>
     /// Реализация получения списка всех связей
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<ParticipationArtistGenre> GetEnum()
+    public IEnumerable<DtoParticipationDetails> GetEnum()
     {
-        return repository.GetEnum();
+        var participations = repository.GetEnum();
+        return mapper.Map<IEnumerable<DtoParticipationDetails>>(participations);
     }
 
     /// <summary>
@@ -24,9 +28,10 @@ public class ServiceParticipationArtistGenre(IRepositoryParticipationArtistGenre
     /// <param name="idGenre"></param>
     /// <param name="idArtist"></param>
     /// <returns></returns>
-    public ParticipationArtistGenre? Get(int idGenre, int idArtist)
+    public DtoParticipationDetails? Get(int idGenre, int idArtist)
     {
-        return repository.Get(idGenre, idArtist);
+        var participation = repository.Get(idGenre, idArtist);
+        return participation == null ? null : mapper.Map<DtoParticipationDetails>(participation);
     }
 
     /// <summary>
@@ -34,11 +39,12 @@ public class ServiceParticipationArtistGenre(IRepositoryParticipationArtistGenre
     /// </summary>
     /// <param name="participation"></param>
     /// <returns></returns>
-    public bool Post(ParticipationArtistGenre participation)
+    public bool Post(DtoParticipationDetails participation)
     {
         if (!serviceArtist.ArtistExists(participation.IdArtist) || !serviceGenre.GenreExists(participation.IdGenre))
             return false;
-        return repository.Post(participation);
+        var part = mapper.Map<ParticipationArtistGenre>(participation);
+        return repository.Post(part);
     }
 
     /// <summary>
@@ -48,9 +54,10 @@ public class ServiceParticipationArtistGenre(IRepositoryParticipationArtistGenre
     /// <param name="idArtist"></param>
     /// <param name="participation"></param>
     /// <returns></returns>
-    public bool Put(int idGenre, int idArtist, ParticipationArtistGenre participation)
+    public bool Put(int idGenre, int idArtist, DtoParticipationDetails participation)
     {
-        return repository.Put(idGenre, idArtist, participation);
+        var participationOrig = mapper.Map<ParticipationArtistGenre>(participation);
+        return repository.Put(idGenre, idArtist, participationOrig);
     }
 
     /// <summary>

@@ -3,48 +3,39 @@ using MediaLibrary.Classes;
 using MediaLibrary.Classes.IRepositories;
 using WebApi.Dto;
 
-/// <summary>
-/// Имплементация интерфейса сервиса для управления артистами
-/// </summary>
 public class ServiceArtist(IRepositoryArtist repository, IMapper mapper) : IServiceArtist
 {
     /// <summary>
-    /// Реализация получения списка всех артистов
+    /// Получение списка всех альбомов
     /// </summary>
-    /// <returns></returns>
-    public IEnumerable<Artist> GetEnum()
+    public IEnumerable<DtoArtistDetails> GetEnum()
     {
-        return repository.GetEnum();
+        var artists = repository.GetEnum();
+        return mapper.Map<IEnumerable<DtoArtistDetails>>(artists);
     }
 
     /// <summary>
-    /// Реализация получения данных об артисте
+    /// Получение данных об альбоме по ID
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public Artist? Get(int id)
+    public DtoArtistDetails? Get(int id)
     {
-        return repository.Get(id);
+        var artist = repository.Get(id);
+        return artist == null ? null : mapper.Map<DtoArtistDetails>(artist);
     }
 
     /// <summary>
-    /// Реализация добавления артиста в список
+    /// Добавление альбома в список
     /// </summary>
-    /// <param name="dtoArtist"></param>
-    /// <returns></returns>
-    public bool Post(DtoArtist dtoArtist)
+    public bool Post(DtoArtistCreateUpdate dtoArtist)
     {
         var artist = mapper.Map<Artist>(dtoArtist);
         return repository.Post(artist);
     }
 
     /// <summary>
-    /// Реализация изменения данных об артисте
+    /// Изменение данных альбома
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="dtoArtist"></param>
-    /// <returns></returns>
-    public bool Put(int id, DtoArtist dtoArtist)
+    public bool Put(int id, DtoArtistCreateUpdate dtoArtist)
     {
         var artist = mapper.Map<Artist>(dtoArtist);
         artist.Id = id;
@@ -52,20 +43,16 @@ public class ServiceArtist(IRepositoryArtist repository, IMapper mapper) : IServ
     }
 
     /// <summary>
-    /// Реализация удаления артиста
+    /// Удаление альбома по ID
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
     public bool Delete(int id)
     {
         return repository.Delete(id);
     }
 
     /// <summary>
-    /// Реализация проверки существования артиста
+    /// Проверка существования артиста
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
     public bool ArtistExists(int id)
     {
         return repository.Get(id) != null;

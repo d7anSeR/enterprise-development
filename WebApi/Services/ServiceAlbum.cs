@@ -3,39 +3,30 @@ using MediaLibrary.Classes;
 using MediaLibrary.Classes.IRepositories;
 using WebApi.Dto;
 
-/// <summary>
-/// Имплементация интерфейса сервиса для управления альбомами
-/// </summary>
-/// <param name="repository"></param>
-/// <param name="mapper"></param>
-/// <param name="serviceArtist"></param>
 public class ServiceAlbum(IRepositoryAlbum repository, IMapper mapper, IServiceArtist serviceArtist) : IServiceAlbum
 {
     /// <summary>
-    /// Реализация получения списка всех альбомов
+    /// Получение списка всех альбомов
     /// </summary>
-    /// <returns></returns>
-    public IEnumerable<Album> GetEnum()
+    public IEnumerable<DtoAlbumDetails> GetEnum()
     {
-        return repository.GetEnum();
+        var albums = repository.GetEnum();
+        return mapper.Map<IEnumerable<DtoAlbumDetails>>(albums);
     }
 
     /// <summary>
-    /// Реализация получения данных об альбоме
+    /// Получение данных об альбоме по ID
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public Album? Get(int id)
+    public DtoAlbumDetails? Get(int id)
     {
-        return repository.Get(id);
+        var album = repository.Get(id);
+        return album == null ? null : mapper.Map<DtoAlbumDetails>(album);
     }
 
     /// <summary>
-    /// Реализация добавления альбома в список
+    /// Добавление альбома в список
     /// </summary>
-    /// <param name="dtoAlbum"></param>
-    /// <returns></returns>
-    public bool Post(DtoAlbum dtoAlbum)
+    public bool Post(DtoAlbumCreateUpdate dtoAlbum)
     {
         if (!serviceArtist.ArtistExists(dtoAlbum.IdArtist))
             return false;
@@ -44,12 +35,9 @@ public class ServiceAlbum(IRepositoryAlbum repository, IMapper mapper, IServiceA
     }
 
     /// <summary>
-    /// Реализация изменения данных альбома
+    /// Изменение данных альбома
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="dtoAlbum"></param>
-    /// <returns></returns>
-    public bool Put(int id, DtoAlbum dtoAlbum)
+    public bool Put(int id, DtoAlbumCreateUpdate dtoAlbum)
     {
         var album = mapper.Map<Album>(dtoAlbum);
         album.Id = id;
@@ -57,20 +45,16 @@ public class ServiceAlbum(IRepositoryAlbum repository, IMapper mapper, IServiceA
     }
 
     /// <summary>
-    /// Реализация удаления альбома
+    /// Удаление альбома по ID
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
     public bool Delete(int id)
     {
         return repository.Delete(id);
     }
 
     /// <summary>
-    /// Реализация проверки существования альбома 
+    /// Проверка существования альбома
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
     public bool AlbumExists(int id)
     {
         return repository.Get(id) != null;

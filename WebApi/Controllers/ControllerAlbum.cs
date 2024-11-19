@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Dto;
 using MediaLibrary.Classes;
+using AutoMapper;
 
 namespace WebApi.Controllers;
 
@@ -8,9 +9,10 @@ namespace WebApi.Controllers;
 /// Контроллер для работы с музыкальными альбомами
 /// </summary>
 /// <param name="_albumService"></param>
+/// <param name="_mapper"></param>
 [Route("api/[controller]")]
 [ApiController]
-public class ControllerAlbum(IServiceAlbum _albumService) : ControllerBase
+public class ControllerAlbum(IServiceAlbum _albumService, IMapper _mapper) : ControllerBase
 {
     /// <summary>
     /// Получения списка всех альбомов
@@ -19,7 +21,9 @@ public class ControllerAlbum(IServiceAlbum _albumService) : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<Album>> Get()
     {
-        return Ok(_albumService.GetEnum());
+        var albums = _albumService.GetEnum();
+        var albumsDtos = _mapper.Map<IEnumerable<DtoAlbumDetails>>(albums);
+        return Ok(albumsDtos);
     }
 
     /// <summary>
@@ -33,7 +37,8 @@ public class ControllerAlbum(IServiceAlbum _albumService) : ControllerBase
         var album = _albumService.Get(id);
         if (album == null)
             return NotFound();
-        return Ok(album);
+        var albumDto = _mapper.Map<DtoAlbumDetails>(album);
+        return Ok(albumDto);
     }
 
     /// <summary>
@@ -42,9 +47,13 @@ public class ControllerAlbum(IServiceAlbum _albumService) : ControllerBase
     /// <param name="album"></param>
     /// <returns></returns>
     [HttpPost]
-    public IActionResult Post([FromBody] DtoAlbum album)
+    public IActionResult Post([FromBody] DtoAlbumCreateUpdate album)
     {
-        return _albumService.Post(album) ? Ok() : BadRequest();
+        if (_albumService.Post(album))
+        {
+            return CreatedAtAction(nameof(Get), album);
+        }
+        return BadRequest();
     }
 
     /// <summary>
@@ -54,9 +63,15 @@ public class ControllerAlbum(IServiceAlbum _albumService) : ControllerBase
     /// <param name="album"></param>
     /// <returns></returns>
     [HttpPut("{id}")]
-    public IActionResult Put(int id, [FromBody] DtoAlbum album)
+    public IActionResult Put(int id, [FromBody] DtoAlbumCreateUpdate album)
     {
-        return _albumService.Put(id, album) ? Ok() : NotFound();
+        if (_albumService.Put(id, album))
+        {
+            var updatedAlbumDto = _mapper.Map<DtoAlbumDetails>(album);
+            updatedAlbumDto.Id = id;
+            return CreatedAtAction(nameof(Get), updatedAlbumDto);
+        }
+        return NotFound();
     }
 
     /// <summary>

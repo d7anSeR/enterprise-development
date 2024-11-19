@@ -11,9 +11,14 @@ public class Mapping: Profile
 {
     public Mapping()
     {
-        CreateMap<Album, DtoAlbum>().ReverseMap();
-        CreateMap<Artist, DtoArtist>().ReverseMap();
-        CreateMap<Genre, DtoGenre>().ReverseMap();
-        CreateMap<Track, DtoTrack>().ReverseMap();
+        CreateMap<Album, DtoAlbumCreateUpdate>().ReverseMap();
+        CreateMap<DtoAlbumDetails, Album>().ReverseMap();
+        CreateMap<Artist, DtoArtistCreateUpdate>().ReverseMap();
+        CreateMap<DtoArtistDetails, Artist>().ReverseMap();
+        CreateMap<Genre, DtoGenreCreateUpdate>().ReverseMap();
+        CreateMap<DtoGenreDetails, Genre>().ReverseMap();
+        CreateMap<Track, DtoTrackCreateUpdate>().ReverseMap();
+        CreateMap<DtoTrackDetails, Track>().ReverseMap();
+        CreateMap<DtoParticipationDetails, ParticipationArtistGenre>().ReverseMap();
     }
 }

@@ -1,5 +1,4 @@
 ﻿using WebApi.Dto;
-using MediaLibrary.Classes;
 
 /// <summary>
 /// Интерфейс сервиса для управления музыкальными жанрами
@@ -7,29 +6,29 @@ using MediaLibrary.Classes;
 public interface IServiceGenre
 {
     /// <summary>
-    /// Получение списка всех музыкальных жанров
+    /// Получение списка всех жанров
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<Genre> GetEnum();
+    public IEnumerable<DtoGenreDetails> GetEnum();
     /// <summary>
     /// Получение данных о жанре
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public Genre? Get(int id);
+    public DtoGenreDetails? Get(int id);
     /// <summary>
     /// Добавление жанра в список
     /// </summary>
     /// <param name="dtoGenre"></param>
     /// <returns></returns>
-    public bool Post(DtoGenre dtoGenre);
+    public bool Post(DtoGenreCreateUpdate dtoGenre);
     /// <summary>
-    /// Изменение жанра
+    /// Изменение данных о жанре
     /// </summary>
     /// <param name="id"></param>
     /// <param name="dtoGenre"></param>
     /// <returns></returns>
-    public bool Put(int id, DtoGenre dtoGenre);
+    public bool Put(int id, DtoGenreCreateUpdate dtoGenre);
     /// <summary>
     /// Удаление жанра
     /// </summary>

@@ -1,4 +1,5 @@
 ﻿using MediaLibrary.Classes;
+using WebApi.Dto;
 
 /// <summary>
 /// Интерфейс сервиса для управления связями между артистом и жанром музыки
@@ -9,28 +10,28 @@ public interface IServiceParticipationArtistGenre
     /// Получение списка всех связей
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<ParticipationArtistGenre> GetEnum();
+    public IEnumerable<DtoParticipationDetails> GetEnum();
     /// <summary>
     /// Получение данных о связи
     /// </summary>
     /// <param name="idGenre"></param>
     /// <param name="idArtist"></param>
     /// <returns></returns>
-    public ParticipationArtistGenre? Get(int idGenre, int idArtist);
+    public DtoParticipationDetails? Get(int idGenre, int idArtist);
     /// <summary>
     /// Добавление связи в список
     /// </summary>
-    /// <param name="participation"></param>
+    /// <param name="dtoPparticipation"></param>
     /// <returns></returns>
-    public bool Post(ParticipationArtistGenre participation);
+    public bool Post(DtoParticipationDetails dtoPparticipation);
     /// <summary>
     /// Изменение данных связи
     /// </summary>
     /// <param name="idGenre"></param>
     /// <param name="idArtist"></param>
-    /// <param name="participation"></param>
+    /// <param name="dtoParticipation"></param>
     /// <returns></returns>
-    public bool Put(int idGenre, int idArtist, ParticipationArtistGenre participation);
+    public bool Put(int idGenre, int idArtist, DtoParticipationDetails dtoParticipation);
     /// <summary>
     /// Удаление связи
     /// </summary>

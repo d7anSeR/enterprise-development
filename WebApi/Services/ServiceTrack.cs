@@ -3,53 +3,39 @@ using MediaLibrary.Classes;
 using MediaLibrary.Classes.IRepositories;
 using WebApi.Dto;
 
-/// <summary>
-/// Имплементация интерфейса сервиса для управления музыкальными треками
-/// </summary>
-/// <param name="repository"></param>
-/// <param name="mapper"></param>
-/// <param name="serviceAlbum"></param>
-public class ServiceTrack(IRepositoryTrack repository, IMapper mapper, IServiceAlbum serviceAlbum) : IServiceTrack
+public class ServiceTrack(IRepositoryTrack repository, IMapper mapper) : IServiceTrack
 {
     /// <summary>
-    /// Реализация получения списка всех треков
+    /// Получение списка всех треков
     /// </summary>
-    /// <returns></returns>
-    public IEnumerable<Track> GetEnum()
+    public IEnumerable<DtoTrackDetails> GetEnum()
     {
-        return repository.GetEnum();
+        var tracks = repository.GetEnum();
+        return mapper.Map<IEnumerable<DtoTrackDetails>>(tracks);
     }
 
     /// <summary>
-    /// Реализация получения данных о треке
+    /// Получение данных о треке
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public Track? Get(int id)
+    public DtoTrackDetails? Get(int id)
     {
-        return repository.Get(id);
+        var track = repository.Get(id);
+        return track == null ? null : mapper.Map<DtoTrackDetails>(track);
     }
 
     /// <summary>
-    /// Реализация добавления трека в список
+    /// Добавление трека в список
     /// </summary>
-    /// <param name="dtoTrack"></param>
-    /// <returns></returns>
-    public bool Post(DtoTrack dtoTrack)
+    public bool Post(DtoTrackCreateUpdate dtotrack)
     {
-        if (!serviceAlbum.AlbumExists(dtoTrack.IdAlbum))
-            return false;
-        var track = mapper.Map<Track>(dtoTrack);
+        var track = mapper.Map<Track>(dtotrack);
         return repository.Post(track);
     }
 
     /// <summary>
-    /// Реализация изменения данных трека
+    /// Изменение данных трека
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="dtoTrack"></param>
-    /// <returns></returns>
-    public bool Put(int id, DtoTrack dtoTrack)
+    public bool Put(int id, DtoTrackCreateUpdate dtoTrack)
     {
         var track = mapper.Map<Track>(dtoTrack);
         track.Id = id;
@@ -57,10 +43,8 @@ public class ServiceTrack(IRepositoryTrack repository, IMapper mapper, IServiceA
     }
 
     /// <summary>
-    /// Реализация удаления трека
+    /// Удаление трека
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
     public bool Delete(int id)
     {
         return repository.Delete(id);

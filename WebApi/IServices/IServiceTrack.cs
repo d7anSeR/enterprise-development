@@ -1,5 +1,4 @@
 ﻿using WebApi.Dto;
-using MediaLibrary.Classes;
 
 /// <summary>
 /// Интерфейс сервиса для управления музыкальными треками
@@ -10,26 +9,26 @@ public interface IServiceTrack
     /// Получение списка всех треков
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<Track> GetEnum();
+    public IEnumerable<DtoTrackDetails> GetEnum();
     /// <summary>
     /// Получение данных о треке
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public Track? Get(int id);
+    public DtoTrackDetails? Get(int id);
     /// <summary>
     /// Добавление трека в список
     /// </summary>
     /// <param name="dtoTrack"></param>
     /// <returns></returns>
-    public bool Post(DtoTrack dtoTrack);
+    public bool Post(DtoTrackCreateUpdate dtoTrack);
     /// <summary>
-    /// Изменение данных трека
+    /// Изменение данных о треке
     /// </summary>
     /// <param name="id"></param>
     /// <param name="dtoTrack"></param>
     /// <returns></returns>
-    public bool Put(int id, DtoTrack dtoTrack);
+    public bool Put(int id, DtoTrackCreateUpdate dtoTrack);
     /// <summary>
     /// Удаление трека
     /// </summary>

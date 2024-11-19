@@ -1,8 +1,7 @@
 ﻿using WebApi.Dto;
-using MediaLibrary.Classes;
 
 /// <summary>
-/// Интерфейс сервиса для управления артистами
+/// Интерфейс сервиса для управления музыкальными артистами
 /// </summary>
 public interface IServiceArtist
 {
@@ -10,26 +9,26 @@ public interface IServiceArtist
     /// Получение списка всех артистов
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<Artist> GetEnum();
+    public IEnumerable<DtoArtistDetails> GetEnum();
     /// <summary>
     /// Получение данных об артисте
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public Artist? Get(int id);
+    public DtoArtistDetails? Get(int id);
     /// <summary>
     /// Добавление артиста в список
     /// </summary>
     /// <param name="dtoArtist"></param>
     /// <returns></returns>
-    public bool Post(DtoArtist dtoArtist);
+    public bool Post(DtoArtistCreateUpdate dtoArtist);
     /// <summary>
     /// Изменение данных об артисте
     /// </summary>
     /// <param name="id"></param>
     /// <param name="dtoArtist"></param>
     /// <returns></returns>
-    public bool Put(int id, DtoArtist dtoArtist);
+    public bool Put(int id, DtoArtistCreateUpdate dtoArtist);
     /// <summary>
     /// Удаление артиста
     /// </summary>

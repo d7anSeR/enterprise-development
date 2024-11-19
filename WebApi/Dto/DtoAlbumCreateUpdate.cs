@@ -3,7 +3,7 @@
 /// <summary>
 /// Объект передачи данных для альбома
 /// </summary>
-public class DtoAlbum
+public class DtoAlbumCreateUpdate
 {
     /// <summary>
     /// Название альбома

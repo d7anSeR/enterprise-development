@@ -1,25 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Dto;
 using MediaLibrary.Classes;
+using AutoMapper;
 
 namespace WebApi.Controllers;
 
 /// <summary>
-/// Контроллер для работы с артистами
+/// Контроллер для работы с музыкальными артистами
 /// </summary>
 /// <param name="_artistService"></param>
+/// <param name="_mapper"></param>
 [Route("api/[controller]")]
 [ApiController]
-public class ControllerArtist(IServiceArtist _artistService) : ControllerBase
+public class ControllerArtist(IServiceArtist _artistService, IMapper _mapper) : ControllerBase
 {
     /// <summary>
-    /// Получение списка артистов
+    /// Получения списка всех артистов
     /// </summary>
     /// <returns></returns>
     [HttpGet]
     public ActionResult<IEnumerable<Artist>> Get()
     {
-        return Ok(_artistService.GetEnum());
+        var artists = _artistService.GetEnum();
+        var artistsDtos = _mapper.Map<IEnumerable<DtoArtistDetails>>(artists);
+        return Ok(artistsDtos);
     }
 
     /// <summary>
@@ -33,7 +37,8 @@ public class ControllerArtist(IServiceArtist _artistService) : ControllerBase
         var artist = _artistService.Get(id);
         if (artist == null)
             return NotFound();
-        return Ok(artist);
+        var artistDto = _mapper.Map<DtoArtistDetails>(artist);
+        return Ok(artistDto);
     }
 
     /// <summary>
@@ -42,9 +47,13 @@ public class ControllerArtist(IServiceArtist _artistService) : ControllerBase
     /// <param name="artist"></param>
     /// <returns></returns>
     [HttpPost]
-    public IActionResult Post([FromBody] DtoArtist artist)
+    public IActionResult Post([FromBody] DtoArtistCreateUpdate artist)
     {
-        return _artistService.Post(artist) ? Ok() : BadRequest();
+        if (_artistService.Post(artist))
+        {
+            return CreatedAtAction(nameof(Get), artist);
+        }
+        return BadRequest();
     }
 
     /// <summary>
@@ -54,13 +63,19 @@ public class ControllerArtist(IServiceArtist _artistService) : ControllerBase
     /// <param name="artist"></param>
     /// <returns></returns>
     [HttpPut("{id}")]
-    public IActionResult Put(int id, [FromBody] DtoArtist artist)
+    public IActionResult Put(int id, [FromBody] DtoArtistCreateUpdate artist)
     {
-        return _artistService.Put(id, artist) ? Ok() : NotFound();
+        if (_artistService.Put(id, artist))
+        {
+            var updatedArtistDto = _mapper.Map<DtoArtistDetails>(artist);
+            updatedArtistDto.Id = id;
+            return CreatedAtAction(nameof(Get), updatedArtistDto);
+        }
+        return NotFound();
     }
 
     /// <summary>
-    /// Удаление артиста из списка
+    /// Удаление артиста
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>

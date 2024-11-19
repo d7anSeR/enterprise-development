@@ -3,7 +3,7 @@
 /// <summary>
 /// Объект передачи данных для жанра музыки
 /// </summary>
-public class DtoGenre
+public class DtoGenreCreateUpdate
 {
     /// <summary>
     /// Название жанра

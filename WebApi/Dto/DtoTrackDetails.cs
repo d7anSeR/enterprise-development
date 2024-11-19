@@ -1,10 +1,14 @@
 ﻿namespace WebApi.Dto;
 
 /// <summary>
-/// Объект передачи данных для музыкального трека
+/// Объект передачи данных для музыкального трека с его идентификатором 
 /// </summary>
-public class DtoTrack
+public class DtoTrackDetails
 {
+    /// <summary>
+    /// Идентификатор музыкального трека
+    /// </summary>
+    public int Id { get; set; }
     /// <summary>
     /// Номер трека в альбоме
     /// </summary>
