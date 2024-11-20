@@ -19,7 +19,7 @@ public class ControllerParticipationArtistGenre(IServiceParticipationArtistGenre
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult<IEnumerable<ParticipationArtistGenre>> Get()
+    public ActionResult<IEnumerable<DtoParticipationDetails>> Get()
     {
         var participations = _participationService.GetEnum();
         var participationsDtos = _mapper.Map<IEnumerable<DtoParticipationDetails>>(participations);
@@ -33,7 +33,7 @@ public class ControllerParticipationArtistGenre(IServiceParticipationArtistGenre
     /// <param name="idArtist"></param>
     /// <returns></returns>
     [HttpGet("{id}")]
-    public ActionResult<ParticipationArtistGenre> Get(int idGenre, int idArtist)
+    public ActionResult<DtoParticipationDetails> Get(int idGenre, int idArtist)
     {
         var participation = _participationService.Get(idGenre, idArtist);
         if (participation == null)
@@ -85,6 +85,6 @@ public class ControllerParticipationArtistGenre(IServiceParticipationArtistGenre
     [HttpDelete("{id}")]
     public IActionResult Delete(int idGenre, int idArtist)
     {
-        return _participationService.Delete(idGenre, idArtist) ? Ok() : NotFound();
+        return _participationService.Delete(idGenre, idArtist) ? Ok() : NoContent();
     }
 }

@@ -19,7 +19,7 @@ public class ControllerGenre(IServiceGenre _genreService, IMapper _mapper) : Con
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult<IEnumerable<Genre>> Get()
+    public ActionResult<IEnumerable<DtoGenreDetails>> Get()
     {
         var genres = _genreService.GetEnum();
         var genresDtos = _mapper.Map<IEnumerable<DtoGenreDetails>>(genres);
@@ -32,7 +32,7 @@ public class ControllerGenre(IServiceGenre _genreService, IMapper _mapper) : Con
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id}")]
-    public ActionResult<Genre> Get(int id)
+    public ActionResult<DtoGenreDetails> Get(int id)
     {
         var genre = _genreService.Get(id);
         if (genre == null)
@@ -82,6 +82,6 @@ public class ControllerGenre(IServiceGenre _genreService, IMapper _mapper) : Con
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        return _genreService.Delete(id) ? Ok() : NotFound();
+        return _genreService.Delete(id) ? Ok() : NoContent();
     }
 }

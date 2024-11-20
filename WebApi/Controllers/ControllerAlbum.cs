@@ -19,7 +19,7 @@ public class ControllerAlbum(IServiceAlbum _albumService, IMapper _mapper) : Con
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult<IEnumerable<Album>> Get()
+    public ActionResult<IEnumerable<DtoAlbumDetails>> Get()
     {
         var albums = _albumService.GetEnum();
         var albumsDtos = _mapper.Map<IEnumerable<DtoAlbumDetails>>(albums);
@@ -32,7 +32,7 @@ public class ControllerAlbum(IServiceAlbum _albumService, IMapper _mapper) : Con
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id}")]
-    public ActionResult<Album> Get(int id)
+    public ActionResult<DtoAlbumDetails> Get(int id)
     {
         var album = _albumService.Get(id);
         if (album == null)
@@ -82,6 +82,6 @@ public class ControllerAlbum(IServiceAlbum _albumService, IMapper _mapper) : Con
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        return _albumService.Delete(id) ? Ok() : NotFound();
+        return _albumService.Delete(id) ? Ok() : NoContent();
     }
 }

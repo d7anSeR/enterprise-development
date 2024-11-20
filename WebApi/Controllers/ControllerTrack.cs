@@ -19,7 +19,7 @@ public class ControllerTrack(IServiceTrack _trackService, IMapper _mapper) : Con
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult<IEnumerable<Track>> Get()
+    public ActionResult<IEnumerable<DtoTrackDetails>> Get()
     {
         var tracks = _trackService.GetEnum();
         var tracksDtos = _mapper.Map<IEnumerable<DtoTrackDetails>>(tracks);
@@ -32,7 +32,7 @@ public class ControllerTrack(IServiceTrack _trackService, IMapper _mapper) : Con
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id}")]
-    public ActionResult<Track> Get(int id)
+    public ActionResult<DtoTrackDetails> Get(int id)
     {
         var track = _trackService.Get(id);
         if (track == null)
@@ -82,6 +82,6 @@ public class ControllerTrack(IServiceTrack _trackService, IMapper _mapper) : Con
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        return _trackService.Delete(id) ? Ok() : NotFound();
+        return _trackService.Delete(id) ? Ok() : NoContent();
     }
 }

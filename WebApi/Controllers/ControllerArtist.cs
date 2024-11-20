@@ -19,7 +19,7 @@ public class ControllerArtist(IServiceArtist _artistService, IMapper _mapper) : 
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult<IEnumerable<Artist>> Get()
+    public ActionResult<IEnumerable<DtoArtistDetails>> Get()
     {
         var artists = _artistService.GetEnum();
         var artistsDtos = _mapper.Map<IEnumerable<DtoArtistDetails>>(artists);
@@ -32,7 +32,7 @@ public class ControllerArtist(IServiceArtist _artistService, IMapper _mapper) : 
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpGet("{id}")]
-    public ActionResult<Artist> Get(int id)
+    public ActionResult<DtoArtistDetails> Get(int id)
     {
         var artist = _artistService.Get(id);
         if (artist == null)
@@ -82,6 +82,6 @@ public class ControllerArtist(IServiceArtist _artistService, IMapper _mapper) : 
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        return _artistService.Delete(id) ? Ok() : NotFound();
+        return _artistService.Delete(id) ? Ok() : NoContent();
     }
 }
