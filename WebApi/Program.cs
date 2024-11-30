@@ -1,28 +1,36 @@
-using MediaLibrary.Classes.IRepositories;
-using MediaLibrary.Classes.Repositories;
 using WebApi;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Настройка сервисов
 ConfigureServices(builder.Services);
-
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(builder.Configuration.GetConnectionString("MySql"), new MySqlServerVersion(new Version(8,0,40))));
 var app = builder.Build();
 
+// Конфигурация среды
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// Использование HTTPS и маршрутизация контроллеров
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
 
+/// <summary>
+/// Метод для настройки всех сервисов
+/// </summary>
+/// <param name="services"></param>
 void ConfigureServices(IServiceCollection services)
 {
+    // Добавление поддержки контроллеров
     services.AddControllers();
 
+    // Настройка Swagger
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen(options =>
     {
@@ -31,16 +39,20 @@ void ConfigureServices(IServiceCollection services)
         options.IncludeXmlComments(xmlPath);
     });
 
+    // Регистрация репозиториев
     services.AddSingleton<IRepositoryAlbum, RepositoryAlbum>();
-    services.AddSingleton<IServiceAlbum, ServiceAlbum>();
     services.AddSingleton<IRepositoryArtist, RepositoryArtist>();
-    services.AddSingleton<IServiceArtist, ServiceArtist>();
     services.AddSingleton<IRepositoryGenre, RepositoryGenre>();
-    services.AddSingleton<IServiceGenre, ServiceGenre>();
     services.AddSingleton<IRepositoryTrack, RepositoryTrack>();
-    services.AddSingleton<IServiceTrack, ServiceTrack>();
     services.AddSingleton<IRepositoryParticipationArtistGenre, RepositoryParticipationArtistGenre>();
+
+    // Регистрация сервисов
+    services.AddSingleton<IServiceAlbum, ServiceAlbum>();
+    services.AddSingleton<IServiceArtist, ServiceArtist>();
+    services.AddSingleton<IServiceGenre, ServiceGenre>();
+    services.AddSingleton<IServiceTrack, ServiceTrack>();
     services.AddSingleton<IServiceParticipationArtistGenre, ServiceParticipationArtistGenre>();
 
+    // Настройка AutoMapper
     services.AddAutoMapper(typeof(Mapping));
 }

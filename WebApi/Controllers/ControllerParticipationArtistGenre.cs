@@ -2,6 +2,7 @@
 using WebApi.Dto;
 using MediaLibrary.Classes;
 using AutoMapper;
+using MediaLibrary.Classes.IServices;
 
 namespace WebApi.Controllers;
 

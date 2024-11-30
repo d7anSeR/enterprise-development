@@ -5,7 +5,8 @@ namespace MediaLibrary.Classes.Repositories;
 /// <summary>
 /// Имплементация интерфейса связи артиста и жанра музыки
 /// </summary>
-public class RepositoryParticipationArtistGenre : IRepositoryParticipationArtistGenre { 
+public class RepositoryParticipationArtistGenre : IRepositoryParticipationArtistGenre
+{
     /// <summary>
     /// Список связей
     /// </summary>

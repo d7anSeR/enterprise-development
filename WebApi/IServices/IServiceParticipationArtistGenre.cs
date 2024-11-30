@@ -1,5 +1,4 @@
-﻿using MediaLibrary.Classes;
-using WebApi.Dto;
+﻿using WebApi.Dto;
 
 /// <summary>
 /// Интерфейс сервиса для управления связями между артистом и жанром музыки

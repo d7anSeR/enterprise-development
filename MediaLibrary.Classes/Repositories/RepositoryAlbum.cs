@@ -52,7 +52,7 @@ public class RepositoryAlbum : IRepositoryAlbum
     public bool Post(Album album)
     {
         album.Id = albumId++;
-        if(Get(album.Id) == null)
+        if (Get(album.Id) == null)
         {
             albums.Add(album);
             return true;
