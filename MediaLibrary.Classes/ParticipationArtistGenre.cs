@@ -24,4 +24,5 @@ public class ParticipationArtistGenre
     /// Получение экземпляра жанра
     /// </summary>
     public Genre Genre { get; set; } = null!;
+    public Artist Artist { get; set; } = null!;
 }

@@ -6,7 +6,7 @@ namespace WebApi;
 /// <summary>
 /// Контекст базы данных для работы с сущностями
 /// </summary>
-public class ApplicationDbContext : DbContext
+public class MediaLibraryDbContext : DbContext
 {
     /// <summary>
     /// Коллекция альбомов в базе данных
@@ -32,7 +32,7 @@ public class ApplicationDbContext : DbContext
     /// Инициализирует новый экземпляр контекста базы данных
     /// </summary>
     /// <param name="options"></param>
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+    public MediaLibraryDbContext(DbContextOptions<MediaLibraryDbContext> options) : base(options) { }
 
     /// <summary>
     /// Конфигурация модели данных, включая настройку композитных ключей
@@ -53,9 +53,12 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey(al => al.IdAlbum);
         //Связь артиста и жанра
         modelBuilder.Entity<ParticipationArtistGenre>()
+            .HasOne(a => a.Artist)
+            .WithMany()
+            .HasForeignKey(ar => ar.IdArtist);
+        modelBuilder.Entity<ParticipationArtistGenre>()
             .HasOne(g => g.Genre)
             .WithMany()
-            .HasForeignKey(ar => ar.IdArtist)
             .HasForeignKey(g => g.IdGenre);
     }   
 }

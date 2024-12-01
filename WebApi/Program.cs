@@ -1,12 +1,25 @@
 using WebApi;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using MediaLibrary.Classes;
+using MediaLibrary.Classes.IRepositories;
+using MediaLibrary.Classes.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Регистрация фабрики для DbContext
+builder.Services.AddSingleton<IMediaLibraryDbContextFactory, MediaLibraryDbContextFactory>();
+
+// Настройка контекста базы данных с использованием фабрики
+builder.Services.AddScoped<MediaLibraryDbContext>(provider =>
+{
+    var factory = provider.GetRequiredService<IMediaLibraryDbContextFactory>();
+    return factory.CreateDbContext();
+});
+
 // Настройка сервисов
 ConfigureServices(builder.Services);
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(builder.Configuration.GetConnectionString("MySql"), new MySqlServerVersion(new Version(8,0,40))));
+
 var app = builder.Build();
 
 // Конфигурация среды
