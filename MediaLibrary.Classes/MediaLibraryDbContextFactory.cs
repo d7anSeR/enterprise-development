@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WebApi;
 
@@ -15,8 +14,6 @@ public class MediaLibraryDbContextFactory(IConfiguration configuration): IMediaL
     public MediaLibraryDbContext CreateDbContext()
     {
         var optionsBuilder = new DbContextOptionsBuilder<MediaLibraryDbContext>();
-
-        // Чтение строки подключения из конфигурации и настройка контекста
         var connectionString = configuration.GetConnectionString("MySql");
         optionsBuilder.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 39)));
 

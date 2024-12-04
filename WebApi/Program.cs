@@ -1,9 +1,12 @@
 using WebApi;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore;
 using MediaLibrary.Classes;
 using MediaLibrary.Classes.IRepositories;
 using MediaLibrary.Classes.Repositories;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
