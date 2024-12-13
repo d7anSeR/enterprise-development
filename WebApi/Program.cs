@@ -7,7 +7,6 @@ using MediaLibrary.Classes.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
-using WebApi.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
