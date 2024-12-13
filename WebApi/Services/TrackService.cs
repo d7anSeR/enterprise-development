@@ -3,7 +3,12 @@ using MediaLibrary.Classes;
 using MediaLibrary.Classes.IRepositories;
 using WebApi.Dto;
 
-public class ServiceTrack(IRepositoryTrack repository, IMapper mapper) : IServiceTrack
+/// <summary>
+///  Сервис для работы с треками
+/// </summary>
+/// <param name="repository"></param>
+/// <param name="mapper"></param>
+public class TrackService(IRepositoryTrack repository, IMapper mapper) : IServiceTrack
 {
     /// <summary>
     /// Получение списка всех треков

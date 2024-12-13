@@ -1,3 +1,4 @@
+using AutoMapper;
 using WebApi;
 using System.Reflection;
 using MediaLibrary.Classes;
@@ -6,6 +7,7 @@ using MediaLibrary.Classes.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
+using WebApi.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -63,12 +65,14 @@ void ConfigureServices(IServiceCollection services)
     services.AddSingleton<IRepositoryParticipationArtistGenre, RepositoryParticipationArtistGenre>();
 
     // Регистрация сервисов
-    services.AddSingleton<IServiceAlbum, ServiceAlbum>();
-    services.AddSingleton<IServiceArtist, ServiceArtist>();
-    services.AddSingleton<IServiceGenre, ServiceGenre>();
-    services.AddSingleton<IServiceTrack, ServiceTrack>();
-    services.AddSingleton<IServiceParticipationArtistGenre, ServiceParticipationArtistGenre>();
+    services.AddSingleton<IServiceAlbum, AlbumService>();
+    services.AddSingleton<IServiceArtist, ArtistService>();
+    services.AddSingleton<IServiceGenre, GenreService>();
+    services.AddSingleton<IServiceTrack, TrackService>();
+    services.AddSingleton<IServiceParticipationArtistGenre, ParticipationArtistGenreService>();
 
     // Настройка AutoMapper
-    services.AddAutoMapper(typeof(Mapping));
+    var mapperConfig = new MapperConfiguration(config => config.AddProfile(new Mapping()));
+    IMapper? mapper = mapperConfig.CreateMapper();
+    services.AddSingleton(mapper);
 }

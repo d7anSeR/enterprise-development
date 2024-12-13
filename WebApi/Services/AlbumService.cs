@@ -3,7 +3,13 @@ using MediaLibrary.Classes;
 using MediaLibrary.Classes.IRepositories;
 using WebApi.Dto;
 
-public class ServiceAlbum(IRepositoryAlbum repository, IMapper mapper, IServiceArtist serviceArtist) : IServiceAlbum
+/// <summary>
+/// Сервис для работы с музыкальными альбомами
+/// </summary>
+/// <param name="repository"></param>
+/// <param name="mapper"></param>
+/// <param name="serviceArtist"></param>
+public class AlbumService(IRepositoryAlbum repository, IMapper mapper, IServiceArtist serviceArtist) : IServiceAlbum
 {
     /// <summary>
     /// Получение списка всех альбомов
@@ -28,7 +34,7 @@ public class ServiceAlbum(IRepositoryAlbum repository, IMapper mapper, IServiceA
     /// </summary>
     public bool Post(DtoAlbumCreateUpdate dtoAlbum)
     {
-        if (!serviceArtist.ArtistExists(dtoAlbum.IdArtist))
+        if (!serviceArtist.ArtistExists(dtoAlbum.ArtistId))
             return false;
         var album = mapper.Map<Album>(dtoAlbum);
         return repository.Post(album);

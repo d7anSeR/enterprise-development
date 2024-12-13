@@ -3,7 +3,12 @@ using MediaLibrary.Classes;
 using MediaLibrary.Classes.IRepositories;
 using WebApi.Dto;
 
-public class ServiceGenre(IRepositoryGenre repository, IMapper mapper) : IServiceGenre
+/// <summary>
+/// Сервис для работы с музыкальными жанрами
+/// </summary>
+/// <param name="repository"></param>
+/// <param name="mapper"></param>
+public class GenreService(IRepositoryGenre repository, IMapper mapper) : IServiceGenre
 {
     /// <summary>
     /// Получение списка всех жанров

@@ -3,7 +3,12 @@ using MediaLibrary.Classes;
 using MediaLibrary.Classes.IRepositories;
 using WebApi.Dto;
 
-public class ServiceArtist(IRepositoryArtist repository, IMapper mapper) : IServiceArtist
+/// <summary>
+/// Сервис для работы с музыкальными артистами
+/// </summary>
+/// <param name="repository"></param>
+/// <param name="mapper"></param>
+public class ArtistService(IRepositoryArtist repository, IMapper mapper) : IServiceArtist
 {
     /// <summary>
     /// Получение списка всех альбомов

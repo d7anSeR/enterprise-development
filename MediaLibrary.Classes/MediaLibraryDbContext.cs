@@ -33,32 +33,4 @@ public class MediaLibraryDbContext : DbContext
     /// </summary>
     /// <param name="options"></param>
     public MediaLibraryDbContext(DbContextOptions<MediaLibraryDbContext> options) : base(options) { }
-
-    /// <summary>
-    /// Конфигурация модели данных, включая настройку композитных ключей
-    /// и других свойств
-    /// </summary>
-    /// <param name="modelBuilder"></param>
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        //Связь альбома и артиста
-        modelBuilder.Entity<Album>()
-            .HasOne(ar => ar.Artists)
-            .WithMany()
-            .HasForeignKey(al => al.IdArtist);
-        //Связь трека и альбома
-        modelBuilder.Entity<Track>()
-            .HasOne(al => al.Album)
-            .WithMany()
-            .HasForeignKey(al => al.IdAlbum);
-        //Связь артиста и жанра
-        modelBuilder.Entity<ParticipationArtistGenre>()
-            .HasOne(a => a.Artist)
-            .WithMany()
-            .HasForeignKey(ar => ar.IdArtist);
-        modelBuilder.Entity<ParticipationArtistGenre>()
-            .HasOne(g => g.Genre)
-            .WithMany()
-            .HasForeignKey(g => g.IdGenre);
-    }   
 }
