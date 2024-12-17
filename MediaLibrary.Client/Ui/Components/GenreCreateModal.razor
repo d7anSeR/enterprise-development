@@ -1,0 +1,57 @@
+﻿@inject IMediaLibraryApiWrapper MediaLibraryApi
+
+<Modal @ref="GenreModal">
+    <ModalContent Centered>
+        <Form>
+            <ModalHeader>
+                <ModalTitle>Новый жанр</ModalTitle>
+                <CloseButton Clicked="CloseGenreModalAsync" />
+            </ModalHeader>
+
+            <ModalBody>
+                <Field>
+                    <FieldLabel>Название</FieldLabel>
+                    <TextEdit @bind-Text="@NewGenre.Name" />
+                </Field>
+            </ModalBody>
+
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="CloseGenreModalAsync">Отмена</Button>
+                <Button Color="Color.Primary" Clicked="CreateGenreAsync">Создать</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public bool IsNested { get; set; }
+    [Parameter]
+    public int ParticipationId { get; set; }
+    [Parameter]
+    public EventCallback OnGenreAdded { get; set; }
+
+    private DtoParticipationDetails Participation { get; set; } = new();
+    private Modal GenreModal { get; set; } = new();
+    private DtoGenreCreateUpdate NewGenre { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (IsNested)
+            Participation = await MediaLibraryApi.GetParticipationArtistGenre(null, null, ParticipationId.ToString());
+        await base.OnInitializedAsync();
+    }
+
+    public async Task Show() => await GenreModal.Show();
+
+    private async Task CloseGenreModalAsync() => await GenreModal.Hide();
+
+    private async Task CreateGenreAsync()
+    {
+        await MediaLibraryApi.PostGenre(NewGenre);
+        if (IsNested)
+            await MediaLibraryApi.PostParticipationArtistGenre(new() { GenreId = Participation.GenreId, ArtistId = Participation.ArtistId});
+        await GenreModal.Hide();
+        await OnGenreAdded.InvokeAsync();
+    }
+}

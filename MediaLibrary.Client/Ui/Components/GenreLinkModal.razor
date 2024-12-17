@@ -1,0 +1,65 @@
+﻿@inject IMediaLibraryApiWrapper MediaLibraryApi
+
+<Modal @ref="GenreModal">
+    <ModalContent Centered>
+        <Form>
+            <ModalHeader>
+                <ModalTitle>Добавить еще один жанр</ModalTitle>
+                <CloseButton Clicked="CloseGenreModalAsync" />
+            </ModalHeader>
+
+            <ModalBody>
+                <Field>
+                    <FieldLabel>Еще один жанр</FieldLabel>
+                    <DropdownList TItem="Genre"
+                                  TValue="int"
+                                  Data="@GenresToSelect"
+                                  TextField="@((item)=>CreateCaptionForGenre(item))"
+                                  ValueField="@((item)=>item.Id)"
+                                  @bind-SelectedValue="@SelectedDropValue">
+                        Выбрать соавтора
+                    </DropdownList>
+                </Field>
+            </ModalBody>
+
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="CloseGenreModalAsync">Отмена</Button>
+                <Button Color="Color.Primary" Clicked="LinkGenreAsync">Привязать</Button>
+            </ModalFooter>
+
+        </Form>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public int ParticipationId { get; set; }
+    [Parameter]
+    public EventCallback OnGenreAdded { get; set; }
+
+    private Modal GenreModal { get; set; } = new();
+    private int SelectedDropValue { get; set; }
+    private IList<Genre> GenresToSelect { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        GenresToSelect = await BookStoreApi.GetAllGenres();
+        await base.OnInitializedAsync();
+    }
+
+    public async Task Show() => await GenreModal.Show();
+
+    private async Task LinkGenreAsync()
+    {
+        await BookStoreApi.CreateBookGenre(new() { BookId = BookId.Value, GenreId = SelectedDropValue });
+        await CloseGenreModalAsync();
+        await OnGenreAdded.InvokeAsync();
+    }
+
+    private async Task CloseGenreModalAsync() => await GenreModal.Hide();
+
+    private string CreateCaptionForGenre(GenreDto Genre) =>
+        string.IsNullOrEmpty(Genre.Patronymic)
+        ? $"{Genre.FirstName} {Genre.LastName}"
+        : $"{Genre.LastName} {Genre.FirstName} {Genre.Patronymic}";
+}
