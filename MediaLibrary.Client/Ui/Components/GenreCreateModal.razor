@@ -25,22 +25,10 @@
 
 @code {
     [Parameter]
-    public bool IsNested { get; set; }
-    [Parameter]
-    public int ParticipationId { get; set; }
-    [Parameter]
     public EventCallback OnGenreAdded { get; set; }
 
-    private DtoParticipationDetails Participation { get; set; } = new();
     private Modal GenreModal { get; set; } = new();
     private DtoGenreCreateUpdate NewGenre { get; set; } = new();
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (IsNested)
-            Participation = await MediaLibraryApi.GetParticipationArtistGenre(null, null, ParticipationId.ToString());
-        await base.OnInitializedAsync();
-    }
 
     public async Task Show() => await GenreModal.Show();
 
@@ -49,8 +37,6 @@
     private async Task CreateGenreAsync()
     {
         await MediaLibraryApi.PostGenre(NewGenre);
-        if (IsNested)
-            await MediaLibraryApi.PostParticipationArtistGenre(new() { GenreId = Participation.GenreId, ArtistId = Participation.ArtistId});
         await GenreModal.Hide();
         await OnGenreAdded.InvokeAsync();
     }

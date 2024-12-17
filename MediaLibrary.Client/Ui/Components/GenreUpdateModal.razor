@@ -1,0 +1,52 @@
+﻿@inject IMediaLibraryApiWrapper MediaLibraryApi
+
+<Modal @ref="GenreModal">
+    <ModalContent Centered>
+        <Form>
+            <ModalHeader>
+                <ModalTitle>Изменить жанр</ModalTitle>
+                <CloseButton Clicked="CloseGenreModalAsync" />
+            </ModalHeader>
+
+            <ModalBody>
+                <Field>
+                    <FieldLabel>Название</FieldLabel>
+                    <InputText @bind-Value="@GenreToUpdatee"/>
+                </Field>
+            </ModalBody>
+
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="CloseGenreModalAsync">Отмена</Button>
+                <Button Color="Color.Primary" Clicked="UpdateGenreAsync">Изменить</Button>
+            </ModalFooter>
+
+        </Form>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public EventCallback OnGenreAdded { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+    [Parameter]
+    public GenreCreateModal? GenreToUpdate { get; set; }
+    private Modal GenreModal { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        GenresToSelect = await MediaLibraryApi.GetAllGenres();
+        await base.OnInitializedAsync();
+    }
+
+    public async Task Show() => await GenreModal.Show();
+
+    private async Task UpdateGenreAsync()
+    {
+        await MediaLibraryApi.PutGenre(new() { Id, GenreToUpdate });
+        await CloseGenreModalAsync();
+        await OnGenreAdded.InvokeAsync();
+    }
+
+    private async Task CloseGenreModalAsync() => await GenreModal.Hide();
+}

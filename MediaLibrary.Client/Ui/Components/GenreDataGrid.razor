@@ -11,12 +11,6 @@
                 <Button Color="Color.Primary" Clicked="OpenCreateModal">
                     Создать
                 </Button>
-                @if (IsNested)
-                {
-                    <Button Color="Color.Secondary" Clicked="OpenLinkModal">
-                        Привязать
-                    </Button>
-                }
             </Column>
         </Row>
     </CardHeader>
@@ -39,15 +33,9 @@
                                 <DropdownItem Clicked="() => OpenEditPageAsync(context)">
                                     Редактировать
                                 </DropdownItem>
-                                <DropdownItem Clicked="() => DeleteAuthorAsync(context)">
+                                <DropdownItem Clicked="() => DeleteGenreAsync(context)">
                                     Удалить
                                 </DropdownItem>
-                                @if (IsNested)
-                                {
-                                    <DropdownItem Clicked="() => UnlinkAuthorAsync(context)">
-                                        Отвязать
-                                    </DropdownItem>
-                                }
                             </DropdownMenu>
                         </Dropdown>
                     </DisplayTemplate>
@@ -61,62 +49,59 @@
     </CardBody>
 </Card>
 
-<GenreCreateModal @ref="GenreCreateModal" IsNested="IsNested" ParticipationId="ParticipationId" OnGenreAdded="@HandleGenreAdded" />
+<GenreCreateModal @ref="GenreCreateModal" artistId="artistId" OnGenreAdded="@HandleGenreAdded" />
 
-<GenreLinkModal @ref="GenreLinkModal" ParticipationId="ParticipationId" OnGenreAdded="@HandleGenreAdded"/>
+<GenreUpdateModal @ref="GenreUpdateModal" artistId="artistId" OnGenreAdded="@HandleGenreAdded" />
 
 @code {
     [Parameter]
     public bool IsNested { get; set; }
     [Parameter]
-    public int ParticipationId { get; set; }
+    public int artistId { get; set; }
     [Parameter]
     public EventCallback OnDataChanged { get; set; }
 
-    private IList<DtoGenreDetails> Genres { get; set; } = [];
+    private IEnumerable<DtoGenreDetails> Genres { get; set; } = [];
     private GenreCreateModal GenreCreateModal { get; set; } = new();
-    private GenreLinkModal GenreLinkModal { get; set; } = new();
+    private GenreUpdateModal GenreUpdateModal { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        await RefreshAuthorCollection();
+        await RefreshGenreCollection();
         await base.OnInitializedAsync();
     }
 
     private void OpenEditPageAsync(DtoGenreDetails context)
     {
-        NavManager.NavigateTo($"authors/{context.Id}");
+        NavManager.NavigateTo($"Genres/{context.Id}");
     }
 
-    private async Task UnlinkAuthorAsync(DtoGenreDetails context)
+    private async Task UnUpdateGenreAsync(DtoGenreDetails context)
     {
-        var bookAuthors = (await BookStoreApi.GetAllBooksAuthors()).Where(ba => ba.AuthorId == context.Id);
-        foreach (var ba in bookAuthors)
-            await BookStoreApi.DeleteBookAuthor(ba.Id);
-        await RefreshAuthorCollection();
+        var participations = (await MediaLibraryApi.GetAllParticipationArtistGenre()).Where(ga => ga.GenreId == context.Id);
+        foreach (var ga in participations)
+            await MediaLibraryApi.DeleteParticipationArtistGenre(ga.GenreId, null, null);
+        await RefreshGenreCollection();
         await OnDataChanged.InvokeAsync();
     }
 
-    private async Task DeleteAuthorAsync(AuthorDto context)
+    private async Task DeleteGenreAsync(DtoGenreDetails context)
     {
-        await UnlinkAuthorAsync(context);
-        await BookStoreApi.DeleteAuthor(context.Id);
-        await RefreshAuthorCollection();
+        await UnUpdateGenreAsync(context);
+        await MediaLibraryApi.DeleteGenre(context.Id);
+        await RefreshGenreCollection();
         await OnDataChanged.InvokeAsync();
     }
 
-    private async Task HandleAuthorAdded()
+    private async Task HandleGenreAdded()
     {
-        await RefreshAuthorCollection();
+        await RefreshGenreCollection();
         await OnDataChanged.InvokeAsync();
     }
 
-    private async Task OpenCreateModal() => await AuthorCreateModal.Show();
+    private async Task OpenCreateModal() => await GenreCreateModal.Show();
 
-    private async Task OpenLinkModal() => await AuthorLinkModal.Show();
+    private async Task OpenUpdateModal() => await GenreUpdateModal.Show();
 
-    private async Task RefreshAuthorCollection() =>
-            Authors = IsNested
-            ? await BookStoreApi.GetBookAuthors(BookId!.Value)
-            : await BookStoreApi.GetAllAuthors();
+    private async Task RefreshGenreCollection() => await MediaLibraryApi.GetAllGenre();
 }
