@@ -5,24 +5,24 @@
     <CardHeader>
         <Row Class="justify-content-between">
             <Column ColumnSize="ColumnSize.IsAuto">
-                <h2><MudIcon Icon="@Icons.Material.Filled.MusicNote" Class="icon" />  Жанры</h2>
+                <h2><MudIcon Icon="@Icons.Material.Filled.Link" Class="icon" />  Связь артиста и жанра</h2>
             </Column>
             <Column ColumnSize="ColumnSize.IsAuto">
                 <Button Color="Blazorise.Color.Primary" Clicked="OpenCreateModal">
-                    Добавить жанр
+                    Добавить связь артиста и жанра
                 </Button>
             </Column>
         </Row>
     </CardHeader>
     <CardBody>
-        <DataGrid TItem="DtoGenreDetails"
-                  Data="_genres"
+        <DataGrid TItem="DtoParticipationDetails"
+                  Data="_participations"
                   Responsive
                   Striped>
             <DataGridColumns>
                 <DataGridColumn Width="150px"
-                                TItem="DtoGenreDetails"
-                                Field="@nameof(DtoGenreDetails.Id)"
+                                TItem="DtoParticipationDetails"
+                                Field="@nameof(DtoParticipationDetails.GenreId)"
                                 Caption="Действия">
                     <DisplayTemplate>
                         <Dropdown>
@@ -41,58 +41,62 @@
                     </DisplayTemplate>
                 </DataGridColumn>
 
-                <DataGridColumn TItem="DtoGenreDetails"
-                                Field="@nameof(DtoGenreDetails.Name)"
-                                Caption="Название жанра">
+                <DataGridColumn TItem="DtoParticipationDetails"
+                                Field="@nameof(DtoParticipationDetails.GenreId)"
+                                Caption="Идентификатор жанра">
+                </DataGridColumn>
+                <DataGridColumn TItem="DtoParticipationDetails"
+                                Field="@nameof(DtoParticipationDetails.ArtistId)"
+                                Caption="Идентификатор артиста">
                 </DataGridColumn>
             </DataGridColumns>
         </DataGrid>
     </CardBody>
 </Card>
 
-<GenreCreateModal @ref="GenreCreateModal" OnGenreAdded="@HandleGenreAdded" />
+<ParticipationCreateModal @ref="ParticipationCreateModal" OnParticipationAdded="@HandleParticipationAdded" />
 
 @code {
     [Parameter]
     public EventCallback OnDataChanged { get; set; }
 
-    private List<DtoGenreDetails> _genres = new();
+    private List<DtoParticipationDetails> _participations = new();
 
-    private GenreCreateModal GenreCreateModal { get; set; } = new();
+    private ParticipationCreateModal ParticipationCreateModal { get; set; } = new();
 
-    private async Task LoadGenres()
+    private async Task LoadParticipations()
     {
-        var response = await MediaLibraryApi.GetAllGenre();
+        var response = await MediaLibraryApi.GetAllParticipationArtistGenre();
         if (response != null)
         {
-            _genres = response.ToList();
+            _participations = response.ToList();
         }
     }
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadGenres();
+        await LoadParticipations();
         await base.OnInitializedAsync();
     }
 
-    private void OpenEditPageAsync(DtoGenreDetails context)
+    private void OpenEditPageAsync(DtoParticipationDetails context)
     {
-        NavManager.NavigateTo($"genres/{context.Id}");
+        NavManager.NavigateTo($"participations/{context.GenreId}");
     }
 
-    private async Task DeleteGradeAsync(DtoGenreDetails context)
+    private async Task DeleteGradeAsync(DtoParticipationDetails context)
     {
-        await MediaLibraryApi.DeleteGenre(context.Id);
-        await LoadGenres();
+        await MediaLibraryApi.DeleteParticipationArtistGenre(context.GenreId, context.ArtistId, context.GenreId.ToString());
+        await LoadParticipations();
         await OnDataChanged.InvokeAsync();
     }
 
-    private async Task HandleGenreAdded()
+    private async Task HandleParticipationAdded()
     {
-        await LoadGenres();
+        await LoadParticipations();
         await OnDataChanged.InvokeAsync();
     }
 
-    private async Task OpenCreateModal() => await GenreCreateModal.Show();
+    private async Task OpenCreateModal() => await ParticipationCreateModal.Show();
 
 }

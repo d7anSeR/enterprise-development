@@ -15,7 +15,7 @@ public class MediaLibraryDbContextFactory(IConfiguration configuration): IMediaL
     {
         var optionsBuilder = new DbContextOptionsBuilder<MediaLibraryDbContext>();
         var connectionString = configuration.GetConnectionString("MySql");
-        optionsBuilder.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 39)));
+        optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
         return new MediaLibraryDbContext(optionsBuilder.Options);
     }

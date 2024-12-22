@@ -1,0 +1,56 @@
+﻿@inject IMediaLibraryApiWrapper MediaLibraryApi
+
+<Modal @ref="TrackModal ">
+    <ModalContent Centered>
+        <Form>
+            <ModalHeader>
+                <ModalTitle>Новый альбом</ModalTitle>
+                <CloseButton Clicked="CloseTrackModalAsync" />
+            </ModalHeader>
+
+            <ModalBody>
+                <Field>
+                    <FieldLabel>Номер трека в альбоме</FieldLabel>
+                    <NumericEdit @bind-Value="@newTrack.TrackNum" />
+                </Field>
+                <Field>
+                    <FieldLabel>Название трека</FieldLabel>
+                    <TextEdit @bind-Text="@newTrack.Title" />
+                </Field>
+                <Field>
+                    <FieldLabel>Длительность</FieldLabel>
+                    <TimeEdit @bind-Time="@newTrack.Duration" />
+                </Field>
+                <Field>
+                    <FieldLabel>Идентификатор альбома</FieldLabel>
+                    <NumericEdit @bind-Value="@newTrack.AlbumId" />
+                </Field>
+            </ModalBody>
+
+            <ModalFooter>
+                <Button Color="Blazorise.Color.Secondary" Clicked="CloseTrackModalAsync">Отмена</Button>
+                <Button Color="Blazorise.Color.Primary" Clicked="CreateTrackAsync">Создать</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public EventCallback OnTrackAdded { get; set; }
+
+    private Modal TrackModal { get; set; } = new();
+
+    private DtoTrackCreateUpdate newTrack { get; set; } = new();
+
+    public async Task Show() => await TrackModal.Show();
+
+    private async Task CloseTrackModalAsync() => await TrackModal.Hide();
+
+    private async Task CreateTrackAsync()
+    {
+        await MediaLibraryApi.PostTrack(newTrack);
+        await TrackModal.Hide();
+        await OnTrackAdded.InvokeAsync();
+    }
+}

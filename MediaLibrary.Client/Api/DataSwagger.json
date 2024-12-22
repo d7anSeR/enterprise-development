@@ -13,7 +13,7 @@
         "summary": "Получения списка всех альбомов",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -70,7 +70,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -95,7 +95,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -155,7 +155,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       },
@@ -178,7 +178,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -191,7 +191,7 @@
         "summary": "Получения списка всех артистов",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -248,7 +248,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -273,7 +273,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -333,7 +333,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       },
@@ -356,7 +356,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -369,7 +369,7 @@
         "summary": "Получения списка всех жанров",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -426,7 +426,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -451,7 +451,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -511,7 +511,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       },
@@ -534,7 +534,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -547,7 +547,7 @@
         "summary": "Получения списка всех связей",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -604,7 +604,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -645,7 +645,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -721,7 +721,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       },
@@ -760,7 +760,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -773,7 +773,7 @@
         "summary": "Получения списка всех треков",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -830,7 +830,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -855,7 +855,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -915,7 +915,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       },
@@ -938,7 +938,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -947,6 +947,11 @@
   "components": {
     "schemas": {
       "DtoAlbumCreateUpdate": {
+        "required": [
+          "artistId",
+          "release",
+          "title"
+        ],
         "type": "object",
         "properties": {
           "title": {
@@ -969,6 +974,11 @@
         "description": "Объект передачи данных для альбома"
       },
       "DtoAlbumDetails": {
+        "required": [
+          "artistId",
+          "release",
+          "title"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -996,6 +1006,10 @@
         "description": "Объект передачи данных для альбома с его идентификатором"
       },
       "DtoArtistCreateUpdate": {
+        "required": [
+          "description",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1013,6 +1027,10 @@
         "description": "Объект передачи данных для артиста"
       },
       "DtoArtistDetails": {
+        "required": [
+          "description",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1035,6 +1053,9 @@
         "description": "Объект передачи данных для артиста с его идентификатором"
       },
       "DtoGenreCreateUpdate": {
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -1047,6 +1068,9 @@
         "description": "Объект передачи данных для жанра музыки"
       },
       "DtoGenreDetails": {
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1081,6 +1105,12 @@
         "description": "Объект передачи данных для связей между музыкальным жанром и артистом"
       },
       "DtoTrackCreateUpdate": {
+        "required": [
+          "albumId",
+          "duration",
+          "title",
+          "trackNum"
+        ],
         "type": "object",
         "properties": {
           "trackNum": {
@@ -1094,7 +1124,9 @@
             "nullable": true
           },
           "duration": {
-            "$ref": "#/components/schemas/TimeSpan"
+            "type": "string",
+            "description": "Длительность трека",
+            "format": "date-span"
           },
           "albumId": {
             "type": "integer",
@@ -1106,6 +1138,12 @@
         "description": "Объект передачи данных для музыкального трека"
       },
       "DtoTrackDetails": {
+        "required": [
+          "albumId",
+          "duration",
+          "title",
+          "trackNum"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1124,7 +1162,9 @@
             "nullable": true
           },
           "duration": {
-            "$ref": "#/components/schemas/TimeSpan"
+            "type": "string",
+            "description": "Длительность трека",
+            "format": "date-span"
           },
           "albumId": {
             "type": "integer",
@@ -1134,86 +1174,6 @@
         },
         "additionalProperties": false,
         "description": "Объект передачи данных для музыкального трека с его идентификатором"
-      },
-      "TimeSpan": {
-        "type": "object",
-        "properties": {
-          "ticks": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "days": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "hours": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "milliseconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "microseconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "nanoseconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "minutes": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "seconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "totalDays": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalHours": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalMilliseconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalMicroseconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalNanoseconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalMinutes": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalSeconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
       }
     }
   }

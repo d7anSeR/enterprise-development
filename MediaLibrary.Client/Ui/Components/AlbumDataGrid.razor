@@ -4,25 +4,27 @@
 <Card>
     <CardHeader>
         <Row Class="justify-content-between">
+
             <Column ColumnSize="ColumnSize.IsAuto">
-                <h2><MudIcon Icon="@Icons.Material.Filled.MusicNote" Class="icon" />  Жанры</h2>
+
+				<h2><MudIcon Icon="@Icons.Material.Filled.Album" Class="icon" />  Альбомы</h2>
             </Column>
             <Column ColumnSize="ColumnSize.IsAuto">
                 <Button Color="Blazorise.Color.Primary" Clicked="OpenCreateModal">
-                    Добавить жанр
+                    Добавить альбом
                 </Button>
             </Column>
         </Row>
     </CardHeader>
     <CardBody>
-        <DataGrid TItem="DtoGenreDetails"
-                  Data="_genres"
+        <DataGrid TItem="DtoAlbumDetails"
+                  Data="_albums"
                   Responsive
                   Striped>
             <DataGridColumns>
                 <DataGridColumn Width="150px"
-                                TItem="DtoGenreDetails"
-                                Field="@nameof(DtoGenreDetails.Id)"
+                                TItem="DtoAlbumDetails"
+                                Field="@nameof(DtoAlbumDetails.Id)"
                                 Caption="Действия">
                     <DisplayTemplate>
                         <Dropdown>
@@ -41,58 +43,66 @@
                     </DisplayTemplate>
                 </DataGridColumn>
 
-                <DataGridColumn TItem="DtoGenreDetails"
-                                Field="@nameof(DtoGenreDetails.Name)"
-                                Caption="Название жанра">
+                <DataGridColumn TItem="DtoAlbumDetails"
+                                Field="@nameof(DtoAlbumDetails.Title)"
+                                Caption="Название альбома">
+                </DataGridColumn>
+                <DataGridColumn TItem="DtoAlbumDetails"
+                                Field="@nameof(DtoAlbumDetails.Release)"
+                                Caption="Дата релиза">
+                </DataGridColumn>
+                <DataGridColumn TItem="DtoAlbumDetails"
+                                Field="@nameof(DtoAlbumDetails.ArtistId)"
+                                Caption="Идентификатор артиста">
                 </DataGridColumn>
             </DataGridColumns>
         </DataGrid>
     </CardBody>
 </Card>
 
-<GenreCreateModal @ref="GenreCreateModal" OnGenreAdded="@HandleGenreAdded" />
+<AlbumCreateModal @ref="AlbumCreateModal" OnAlbumAdded="@HandleAlbumAdded" />
 
 @code {
     [Parameter]
     public EventCallback OnDataChanged { get; set; }
 
-    private List<DtoGenreDetails> _genres = new();
+    private List<DtoAlbumDetails> _albums = new();
 
-    private GenreCreateModal GenreCreateModal { get; set; } = new();
+    private AlbumCreateModal AlbumCreateModal { get; set; } = new();
 
-    private async Task LoadGenres()
+    private async Task LoadAlbums()
     {
-        var response = await MediaLibraryApi.GetAllGenre();
+        var response = await MediaLibraryApi.GetAllAlbum();
         if (response != null)
         {
-            _genres = response.ToList();
+            _albums = response.ToList();
         }
     }
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadGenres();
+        await LoadAlbums();
         await base.OnInitializedAsync();
     }
 
-    private void OpenEditPageAsync(DtoGenreDetails context)
+    private void OpenEditPageAsync(DtoAlbumDetails context)
     {
-        NavManager.NavigateTo($"genres/{context.Id}");
+        NavManager.NavigateTo($"albums/{context.Id}");
     }
 
-    private async Task DeleteGradeAsync(DtoGenreDetails context)
+    private async Task DeleteGradeAsync(DtoAlbumDetails context)
     {
-        await MediaLibraryApi.DeleteGenre(context.Id);
-        await LoadGenres();
+        await MediaLibraryApi.DeleteAlbum(context.Id);
+        await LoadAlbums();
         await OnDataChanged.InvokeAsync();
     }
 
-    private async Task HandleGenreAdded()
+    private async Task HandleAlbumAdded()
     {
-        await LoadGenres();
+        await LoadAlbums();
         await OnDataChanged.InvokeAsync();
     }
 
-    private async Task OpenCreateModal() => await GenreCreateModal.Show();
+    private async Task OpenCreateModal() => await AlbumCreateModal.Show();
 
 }

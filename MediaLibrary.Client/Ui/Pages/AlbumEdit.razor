@@ -1,0 +1,69 @@
+﻿@page "/albums/{Id}"
+@inject IMediaLibraryApiWrapper MediaLibraryApi
+@inject IJSRuntime JsRuntime
+
+<Card>
+    <CardHeader>
+        <Row Class="justify-content-between">
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <h4>Редактировать альбом</h4>
+            </Column>
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <Button Color="Blazorise.Color.Primary" Clicked="UpdateAlbumAsync">
+                    Сохранить
+                </Button>
+                <Button Color="Blazorise.Color.Danger" Clicked="DeleteAlbumAsync">
+                    Удалить
+                </Button>
+                <Button Color="Blazorise.Color.Secondary" onclick="history.back();">
+                    Закрыть
+                </Button>
+            </Column>
+        </Row>
+    </CardHeader>
+
+    <CardBody>
+        <Field>
+            <FieldLabel>Название альбома</FieldLabel>
+            <TextEdit @bind-Text="@Album.Title" />
+        </Field>
+        <Field>
+            <FieldLabel>Дата релиза</FieldLabel>
+            <DateEdit @bind-Date="@Album.Release" />
+        </Field>
+        <Field>
+            <FieldLabel>Артист</FieldLabel>
+            <NumericEdit @bind-Value="@Album.ArtistId" />
+        </Field>
+    </CardBody>
+</Card>
+
+@code {
+    [Parameter]
+    public string Id { get; set; } = "";
+
+    private int AlbumId { get; set; }
+
+    private DtoAlbumCreateUpdate Album { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!int.TryParse(Id, out var id))
+            throw new Exception("Некорректный идентификатор");
+        AlbumId = id;
+        await MediaLibraryApi.GetAlbum(AlbumId);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task DeleteAlbumAsync()
+    {
+        await MediaLibraryApi.DeleteAlbum(AlbumId);
+        await JsRuntime.InvokeVoidAsync("history.back");
+    }
+
+    private async Task UpdateAlbumAsync()
+    {
+        await MediaLibraryApi.PutAlbum(AlbumId, Album);
+        await JsRuntime.InvokeVoidAsync("history.back");
+    }
+}

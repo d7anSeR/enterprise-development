@@ -1,0 +1,61 @@
+﻿@page "/genres/{Id}"
+@inject IMediaLibraryApiWrapper MediaLibraryApi
+@inject IJSRuntime JsRuntime
+
+<Card>
+    <CardHeader>
+        <Row Class="justify-content-between">
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <h4>Редактировать альбом</h4>
+            </Column>
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <Button Color="Blazorise.Color.Primary" Clicked="UpdateGenreAsync">
+                    Сохранить
+                </Button>
+                <Button Color="Blazorise.Color.Danger" Clicked="DeleteGenreAsync">
+                    Удалить
+                </Button>
+                <Button Color="Blazorise.Color.Secondary" onclick="history.back();">
+                    Закрыть
+                </Button>
+            </Column>
+        </Row>
+    </CardHeader>
+
+    <CardBody>
+        <Field>
+            <FieldLabel>Название жанра</FieldLabel>
+            <TextEdit @bind-Text="@Genre.Name" />
+        </Field>
+    </CardBody>
+</Card>
+
+@code {
+    [Parameter]
+    public string Id { get; set; } = "";
+
+    private int GenreId { get; set; }
+
+    private DtoGenreCreateUpdate Genre { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!int.TryParse(Id, out var id))
+            throw new Exception("Некорректный идентификатор");
+        GenreId = id;
+        await MediaLibraryApi.GetGenre(GenreId);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task DeleteGenreAsync()
+    {
+        await MediaLibraryApi.DeleteGenre(GenreId);
+        await JsRuntime.InvokeVoidAsync("history.back");
+    }
+
+    private async Task UpdateGenreAsync()
+    {
+        await MediaLibraryApi.PutGenre(GenreId, Genre);
+        await JsRuntime.InvokeVoidAsync("history.back");
+    }
+}

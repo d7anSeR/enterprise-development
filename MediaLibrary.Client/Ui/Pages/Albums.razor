@@ -1,0 +1,159 @@
+﻿@page "/albums"
+
+<AlbumDataGrid />
+
+@code {
+
+}
+
+
+@* 
+@page "/"
+@using System.Globalization;
+
+@inject IMediaLibraryApiWrapper MediaLibraryApi
+
+<PageTitle>Albums</PageTitle>
+
+<h1>Album Management</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Release Date</th>
+            <th>Artist Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (_albums == null || !_albums.Any())
+        {
+            <tr>
+                <td colspan="5" class="text-center">No albums found.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var album in _albums)
+            {
+                <tr>
+                    <td>@album.Id</td>
+                    <td>@album.Title</td>
+                    <td>@album.Release.ToString("g")</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="@(() => ShowUpdForm(album.Id))">Edit</button>
+                        <button class="btn btn-danger" @onclick="@(() => DeleteAlbum(album.Id))">Delete</button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<h3>@(flagAdd ? "Add New Album" : "Edit Album")</h3>
+
+<EditForm Model="@currentAlbum" OnValidSubmit=@HandleFormSubmit>
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="title" class="form-label">Album Title</label>
+        <InputText id="title" class="form-control" @bind-Value="currentAlbum.Title" />
+    </div>
+    <div class="mb-3">
+        <label for="release" class="form-label">Release Date</label>
+        <InputDate id="release" class="form-control" @bind-Value="currentAlbum.Release" />
+    </div>
+    <div class="mb-3">
+        <label for="artistId" class="form-label">Artist</label>
+        <InputSelect id="artistId" class="form-control" @bind-Value="currentAlbum.ArtistId">
+            @foreach (var artist in _artists)
+            {
+                <option value="@artist.">@artist.Name</option>
+            }
+        </InputSelect>
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <button type="button" class="btn btn-secondary" @onclick="ClearForm">Cancel</button>
+</EditForm>
+
+@code {
+    private List<DtoAlbumDetails> _albums = new();
+    private DtoAlbumCreateUpdate currentAlbum = new() { Title = "", Release = DateTime.Now };
+    private bool flagAdd = true;
+
+    private List<DtoArtistDetails> _artists = new();
+
+    private void UpdateCurrentAlbum()
+    {
+        currentAlbum = new() { Title = "", Release = DateTime.Now };
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAlbums();
+        await LoadArtists();
+    }
+
+    private async Task LoadAlbums()
+    {
+        var response = await MediaLibraryApi.GetAllAlbum();
+        if (response != null)
+        {
+            _albums = response.ToList();
+        }
+    }
+
+    private async Task LoadArtists()
+    {
+        var response = await MediaLibraryApi.GetAllArtist();
+        if (response != null)
+        {
+            _artists = response.ToList();
+        }
+    }
+
+    private async Task AddNewAlbum()
+    {
+        await MediaLibraryApi.PostAlbum(currentAlbum);
+        await LoadAlbums();
+    }
+
+    private async Task DeleteAlbum(int albumId)
+    {
+        await MediaLibraryApi.DeleteAlbum(albumId);
+        await LoadAlbums();
+    }
+
+    private async Task UpdateAlbum(int id)
+    {
+        await MediaLibraryApi.PutAlbum(id, currentAlbum);
+        UpdateCurrentAlbum();
+        await LoadAlbums();
+    }
+
+    private async Task ShowUpdForm(int albumId)
+    {
+        flagAdd = false;
+        
+    }
+
+    private void ClearForm()
+    {
+        flagAdd = true;
+        UpdateCurrentAlbum();
+    }
+
+    private async Task HandleFormSubmit()
+    {
+        if (flagAdd)
+        {
+            await AddNewAlbum();
+        }
+        else
+        {
+            await UpdateAlbum(0);
+        }
+    }
+}
+ *@

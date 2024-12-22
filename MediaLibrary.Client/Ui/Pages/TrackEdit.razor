@@ -1,0 +1,73 @@
+﻿@page "/tracks/{Id}"
+@inject IMediaLibraryApiWrapper MediaLibraryApi
+@inject IJSRuntime JsRuntime
+
+<Card>
+    <CardHeader>
+        <Row Class="justify-content-between">
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <h4>Редактировать трек</h4>
+            </Column>
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <Button Color="Blazorise.Color.Primary" Clicked="UpdateTrackAsync">
+                    Сохранить
+                </Button>
+                <Button Color="Blazorise.Color.Danger" Clicked="DeleteTrackAsync">
+                    Удалить
+                </Button>
+                <Button Color="Blazorise.Color.Secondary" onclick="history.back();">
+                    Закрыть
+                </Button>
+            </Column>
+        </Row>
+    </CardHeader>
+
+    <CardBody>
+        <Field>
+            <FieldLabel>Номер трека в альбоме</FieldLabel>
+            <NumericEdit @bind-Value="@Track.TrackNum" />
+        </Field>
+        <Field>
+            <FieldLabel>Название трека</FieldLabel>
+            <TextEdit @bind-Text="@Track.Title" />
+        </Field>
+        <Field>
+            <FieldLabel>Длительность</FieldLabel>
+            <TimeEdit @bind-Time="@Track.Duration" />
+        </Field>
+        <Field>
+            <FieldLabel>Идентификатор альбома</FieldLabel>
+            <NumericEdit @bind-Value="@Track.AlbumId" />
+        </Field>
+    </CardBody>
+</Card>
+
+@code {
+    [Parameter]
+    public string Id { get; set; } = "";
+
+    private int TrackId { get; set; }
+
+    private DtoTrackCreateUpdate Track { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!int.TryParse(Id, out var id))
+            throw new Exception("Некорректный идентификатор");
+        TrackId = id;
+        await MediaLibraryApi.GetTrack(TrackId);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task DeleteTrackAsync()
+    {
+        await MediaLibraryApi.DeleteTrack(TrackId);
+        await JsRuntime.InvokeVoidAsync("history.back");
+    }
+
+    private async Task UpdateTrackAsync()
+    {
+        await MediaLibraryApi.PutTrack(TrackId, Track);
+        await JsRuntime.InvokeVoidAsync("history.back");
+    }
+}

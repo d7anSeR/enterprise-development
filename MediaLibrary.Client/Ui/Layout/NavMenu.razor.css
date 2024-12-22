@@ -81,3 +81,10 @@
         overflow-y: auto;
     }
 }
+
+::deep .icon {
+    width: 30px;
+    aspect-ratio: 1;
+    color: #FFFFFF;
+}
+

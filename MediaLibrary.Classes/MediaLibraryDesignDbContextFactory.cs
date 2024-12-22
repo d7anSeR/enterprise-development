@@ -8,8 +8,8 @@ public class MediaLibraryDesignDbContextFactory : IDesignTimeDbContextFactory<Me
     public MediaLibraryDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<MediaLibraryDbContext>();
-        var connectionString = "Host=localhost;Port=3306;Database=MediaLibrary;User=root;Password=1234;";
-        optionsBuilder.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 39)));
+        var connectionString = "Server=localhost;Port=3306;UserID=root;Password=1111;Database=MediaLibrary;";
+        optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
         return new MediaLibraryDbContext(optionsBuilder.Options);
     }

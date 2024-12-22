@@ -1,0 +1,65 @@
+﻿@page "/artists/{Id}"
+@inject IMediaLibraryApiWrapper MediaLibraryApi
+@inject IJSRuntime JsRuntime
+
+<Card>
+    <CardHeader>
+        <Row Class="justify-content-between">
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <h4>Редактировать артиста</h4>
+            </Column>
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <Button Color="Blazorise.Color.Primary" Clicked="UpdateArtistAsync">
+                    Сохранить
+                </Button>
+                <Button Color="Blazorise.Color.Danger" Clicked="DeleteArtistAsync">
+                    Удалить
+                </Button>
+                <Button Color="Blazorise.Color.Secondary" onclick="history.back();">
+                    Закрыть
+                </Button>
+            </Column>
+        </Row>
+    </CardHeader>
+
+    <CardBody>
+        <Field>
+            <FieldLabel>Никнейм артиста</FieldLabel>
+            <TextEdit @bind-Text="@Artist.Name" />
+        </Field>
+        <Field>
+            <FieldLabel>Краткое описание артиста</FieldLabel>
+            <TextEdit @bind-Text="@Artist.Description" />
+        </Field>
+    </CardBody>
+</Card>
+
+@code {
+    [Parameter]
+    public string Id { get; set; } = "";
+
+    private int ArtistId { get; set; }
+
+    private DtoArtistCreateUpdate Artist { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!int.TryParse(Id, out var id))
+            throw new Exception("Некорректный идентификатор");
+        ArtistId = id;
+        await MediaLibraryApi.GetArtist(ArtistId);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task DeleteArtistAsync()
+    {
+        await MediaLibraryApi.DeleteArtist(ArtistId);
+        await JsRuntime.InvokeVoidAsync("history.back");
+    }
+
+    private async Task UpdateArtistAsync()
+    {
+        await MediaLibraryApi.PutArtist(ArtistId, Artist);
+        await JsRuntime.InvokeVoidAsync("history.back");
+    }
+}

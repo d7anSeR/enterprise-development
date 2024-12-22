@@ -1,0 +1,109 @@
+﻿@inject IMediaLibraryApiWrapper MediaLibraryApi
+@inject NavigationManager NavManager
+
+<Card>
+    <CardHeader>
+        <Row Class="justify-content-between">
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <h2><MudIcon Icon="@Icons.Material.Filled.QueueMusic" Class="icon" />  Треки</h2>
+            </Column>
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <Button Color="Blazorise.Color.Primary" Clicked="OpenCreateModal">
+                    Добавить трек
+                </Button>
+            </Column>
+        </Row>
+    </CardHeader>
+    <CardBody>
+        <DataGrid TItem="DtoTrackDetails"
+                  Data="_tracks"
+                  Responsive
+                  Striped>
+            <DataGridColumns>
+                <DataGridColumn Width="150px"
+                                TItem="DtoTrackDetails"
+                                Field="@nameof(DtoTrackDetails.Id)"
+                                Caption="Действия">
+                    <DisplayTemplate>
+                        <Dropdown>
+                            <DropdownToggle Color="Blazorise.Color.Primary">
+                                Действия
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem Clicked="() => OpenEditPageAsync(context)">
+                                    Редактировать
+                                </DropdownItem>
+                                <DropdownItem Clicked="() => DeleteGradeAsync(context)">
+                                    Удалить
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </DisplayTemplate>
+                </DataGridColumn>
+                <DataGridColumn TItem="DtoTrackDetails"
+                                Field="@nameof(DtoTrackDetails.TrackNum)"
+                                Caption="Номер трека в альбоме">
+                </DataGridColumn>
+                <DataGridColumn TItem="DtoTrackDetails"
+                                Field="@nameof(DtoTrackDetails.Title)"
+                                Caption="Название трека">
+                </DataGridColumn>
+                <DataGridColumn TItem="DtoTrackDetails"
+                                Field="@nameof(DtoTrackDetails.Duration)"
+                                Caption="Длительность трека">
+                </DataGridColumn>
+                <DataGridColumn TItem="DtoTrackDetails"
+                                Field="@nameof(DtoTrackDetails.AlbumId)"
+                                Caption="Идентификатор альбома">
+                </DataGridColumn>
+            </DataGridColumns>
+        </DataGrid>
+    </CardBody>
+</Card>
+
+<TrackCreateModal @ref="TrackCreateModal" OnTrackAdded="@HandleTrackAdded" />
+
+@code {
+    [Parameter]
+    public EventCallback OnDataChanged { get; set; }
+
+    private List<DtoTrackDetails> _tracks = new();
+
+    private TrackCreateModal TrackCreateModal { get; set; } = new();
+
+    private async Task LoadTracks()
+    {
+        var response = await MediaLibraryApi.GetAllTrack();
+        if (response != null)
+        {
+            _tracks = response.ToList();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTracks();
+        await base.OnInitializedAsync();
+    }
+
+    private void OpenEditPageAsync(DtoTrackDetails context)
+    {
+        NavManager.NavigateTo($"tracks/{context.Id}");
+    }
+
+    private async Task DeleteGradeAsync(DtoTrackDetails context)
+    {
+        await MediaLibraryApi.DeleteTrack(context.Id);
+        await LoadTracks();
+        await OnDataChanged.InvokeAsync();
+    }
+
+    private async Task HandleTrackAdded()
+    {
+        await LoadTracks();
+        await OnDataChanged.InvokeAsync();
+    }
+
+    private async Task OpenCreateModal() => await TrackCreateModal.Show();
+
+}

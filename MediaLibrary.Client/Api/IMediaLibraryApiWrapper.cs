@@ -18,7 +18,7 @@ namespace MediaLibrary.Client.Api
         Task<DtoGenreDetails> GetGenre(int id);
         Task<DtoParticipationDetails> GetParticipationArtistGenre(int? genreId, int? artistId, string id);
         Task<DtoTrackDetails> GetTrack(int id);
-        Task PosArtist(DtoArtistCreateUpdate artist);
+        Task PostArtist(DtoArtistCreateUpdate artist);
         Task PostAlbum(DtoAlbumCreateUpdate album);
         Task PostGenre(DtoGenreCreateUpdate genre);
         Task PostParticipationArtistGenre(DtoParticipationDetails participation);

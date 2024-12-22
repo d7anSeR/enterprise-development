@@ -1,0 +1,48 @@
+﻿@inject IMediaLibraryApiWrapper MediaLibraryApi
+
+<Modal @ref="ArtistModal ">
+    <ModalContent Centered>
+        <Form>
+            <ModalHeader>
+                <ModalTitle>Новый артист</ModalTitle>
+                <CloseButton Clicked="CloseArtistModalAsync" />
+            </ModalHeader>
+
+            <ModalBody>
+                <Field>
+                    <FieldLabel>Никнейм артиста</FieldLabel>
+                    <TextEdit @bind-Text="@newArtist.Name" />
+                </Field>
+                <Field>
+                    <FieldLabel>Краткое описание артиста</FieldLabel>
+                    <TextEdit @bind-Text="@newArtist.Description" />
+                </Field>
+            </ModalBody>
+
+            <ModalFooter>
+                <Button Color="Blazorise.Color.Secondary" Clicked="CloseArtistModalAsync">Отмена</Button>
+                <Button Color="Blazorise.Color.Primary" Clicked="CreateArtistAsync">Создать</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public EventCallback OnArtistAdded { get; set; }
+
+    private Modal ArtistModal { get; set; } = new();
+
+    private DtoArtistCreateUpdate newArtist { get; set; } = new();
+
+    public async Task Show() => await ArtistModal.Show();
+
+    private async Task CloseArtistModalAsync() => await ArtistModal.Hide();
+
+    private async Task CreateArtistAsync()
+    {
+        await MediaLibraryApi.PostArtist(newArtist);
+        await ArtistModal.Hide();
+        await OnArtistAdded.InvokeAsync();
+    }
+}

@@ -1,0 +1,65 @@
+﻿@page "/participations/{Id}"
+@inject IMediaLibraryApiWrapper MediaLibraryApi
+@inject IJSRuntime JsRuntime
+
+<Card>
+    <CardHeader>
+        <Row Class="justify-content-between">
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <h4>Редактировать связь артиста и жанра</h4>
+            </Column>
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <Button Color="Blazorise.Color.Primary" Clicked="UpdateParticipationAsync">
+                    Сохранить
+                </Button>
+                <Button Color="Blazorise.Color.Danger" Clicked="DeleteParticipationAsync">
+                    Удалить
+                </Button>
+                <Button Color="Blazorise.Color.Secondary" onclick="history.back();">
+                    Закрыть
+                </Button>
+            </Column>
+        </Row>
+    </CardHeader>
+
+    <CardBody>
+        <Field>
+            <FieldLabel>Идентификатор жанра</FieldLabel>
+            <NumericEdit @bind-Value="@Participation.GenreId" />
+        </Field>
+        <Field>
+            <FieldLabel>Идентификатор артиста</FieldLabel>
+            <NumericEdit @bind-Value="@Participation.ArtistId" />
+        </Field>
+    </CardBody>
+</Card>
+
+@code {
+    [Parameter]
+    public string Id { get; set; } = "";
+
+    private int ParticipationId { get; set; }
+
+    private DtoParticipationDetails Participation { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!int.TryParse(Id, out var id))
+            throw new Exception("Некорректный идентификатор");
+        ParticipationId = id;
+        await MediaLibraryApi.GetParticipationArtistGenre(Participation.GenreId, Participation.ArtistId, ParticipationId.ToString());
+        await base.OnInitializedAsync();
+    }
+
+    private async Task DeleteParticipationAsync()
+    {
+        await MediaLibraryApi.DeleteParticipationArtistGenre(Participation.GenreId, Participation.ArtistId, ParticipationId.ToString());
+        await JsRuntime.InvokeVoidAsync("history.back");
+    }
+
+    private async Task UpdateParticipationAsync()
+    {
+        await MediaLibraryApi.PutParticipationArtistGenre(Participation.GenreId, Participation.ArtistId, ParticipationId.ToString(), Participation);
+        await JsRuntime.InvokeVoidAsync("history.back");
+    }
+}

@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaLibrary.Tests", "Media
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csproj", "{ADB933CA-FBCF-40F1-8375-1FA393BFAFF2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaLibrary.Client", "MediaLibrary.Client\MediaLibrary.Client.csproj", "{83BFF381-3EE5-4338-AE93-30D5D8B764FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaLibrary.Client", "MediaLibrary.Client\MediaLibrary.Client.csproj", "{CE55780D-ACCD-4689-981C-5A7E1A256F29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{ADB933CA-FBCF-40F1-8375-1FA393BFAFF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADB933CA-FBCF-40F1-8375-1FA393BFAFF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADB933CA-FBCF-40F1-8375-1FA393BFAFF2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{83BFF381-3EE5-4338-AE93-30D5D8B764FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{83BFF381-3EE5-4338-AE93-30D5D8B764FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{83BFF381-3EE5-4338-AE93-30D5D8B764FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{83BFF381-3EE5-4338-AE93-30D5D8B764FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE55780D-ACCD-4689-981C-5A7E1A256F29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE55780D-ACCD-4689-981C-5A7E1A256F29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE55780D-ACCD-4689-981C-5A7E1A256F29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE55780D-ACCD-4689-981C-5A7E1A256F29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

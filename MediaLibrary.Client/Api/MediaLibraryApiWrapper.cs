@@ -12,7 +12,7 @@ public class MediaLibraryApiWrapper(IConfiguration configuration) : IMediaLibrar
     public async Task DeleteAlbum(int id) => await _client.ControllerAlbumDELETEAsync(id);
     //Работа с сущностью "артиста"
     public async Task<ICollection<DtoArtistDetails>> GetAllArtist() => await _client.ControllerArtistAllAsync();
-    public async Task PosArtist(DtoArtistCreateUpdate artist) => await _client.ControllerArtistPOSTAsync(artist);
+    public async Task PostArtist(DtoArtistCreateUpdate artist) => await _client.ControllerArtistPOSTAsync(artist);
     public async Task<DtoArtistDetails> GetArtist(int id) => await _client.ControllerArtistGETAsync(id);
     public async Task PutArtist(int id, DtoArtistCreateUpdate artist) => await _client.ControllerArtistPUTAsync(id, artist);
     public async Task DeleteArtist(int id) => await _client.ControllerArtistDELETEAsync(id);

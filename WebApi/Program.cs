@@ -7,11 +7,12 @@ using MediaLibrary.Classes.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Регистрация фабрики для DbContext
+//Регистрация фабрики для DbContext
 builder.Services.AddSingleton<IMediaLibraryDbContextFactory, MediaLibraryDbContextFactory>();
 
 // Настройка контекста базы данных с использованием фабрики
@@ -24,6 +25,9 @@ builder.Services.AddScoped<MediaLibraryDbContext>(provider =>
 // Настройка сервисов
 ConfigureServices(builder.Services);
 
+builder.Services.AddCors(options => options.AddDefaultPolicy(policy => { policy.AllowAnyOrigin(); policy.AllowAnyMethod(); policy.AllowAnyHeader(); }));
+
+
 var app = builder.Build();
 
 // Конфигурация среды
@@ -35,6 +39,7 @@ if (app.Environment.IsDevelopment())
 
 // Использование HTTPS и маршрутизация контроллеров
 app.UseHttpsRedirection();
+app.UseCors();
 app.MapControllers();
 app.Run();
 

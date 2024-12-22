@@ -1,0 +1,48 @@
+﻿@inject IMediaLibraryApiWrapper MediaLibraryApi
+
+<Modal @ref="ParticipationModal ">
+    <ModalContent Centered>
+        <Form>
+            <ModalHeader>
+                <ModalTitle>Новая связь артиста и жанра</ModalTitle>
+                <CloseButton Clicked="CloseParticipationModalAsync" />
+            </ModalHeader>
+
+            <ModalBody>
+                <Field>
+                    <FieldLabel>Идентификатор жанра</FieldLabel>
+                    <NumericEdit @bind-Value="@newParticipation.GenreId" />
+                </Field>
+                <Field>
+                    <FieldLabel>Идентификатор артиста</FieldLabel>
+                    <NumericEdit @bind-Value="@newParticipation.ArtistId" />
+                </Field>
+            </ModalBody>
+
+            <ModalFooter>
+                <Button Color="Blazorise.Color.Secondary" Clicked="CloseParticipationModalAsync">Отмена</Button>
+                <Button Color="Blazorise.Color.Primary" Clicked="CreateParticipationAsync">Создать</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public EventCallback OnParticipationAdded { get; set; }
+
+    private Modal ParticipationModal { get; set; } = new();
+
+    private DtoParticipationDetails newParticipation { get; set; } = new();
+
+    public async Task Show() => await ParticipationModal.Show();
+
+    private async Task CloseParticipationModalAsync() => await ParticipationModal.Hide();
+
+    private async Task CreateParticipationAsync()
+    {
+        await MediaLibraryApi.PostParticipationArtistGenre(newParticipation);
+        await ParticipationModal.Hide();
+        await OnParticipationAdded.InvokeAsync();
+    }
+}

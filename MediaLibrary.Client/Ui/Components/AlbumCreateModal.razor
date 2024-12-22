@@ -1,0 +1,53 @@
+﻿@inject IMediaLibraryApiWrapper MediaLibraryApi
+
+<Modal @ref="AlbumModal ">
+    <ModalContent Centered>
+        <Form>
+            <ModalHeader>
+                <ModalTitle>Новый альбом</ModalTitle>
+                <CloseButton Clicked="CloseAlbumModalAsync" />
+            </ModalHeader>
+
+            <ModalBody>
+                <Field>
+                    <FieldLabel>Название альбома</FieldLabel>
+                    <TextEdit @bind-Text="@newAlbum.Title" />
+                </Field>
+                <Field>
+                    <FieldLabel>Год релиза</FieldLabel>
+                    <DateEdit @bind-Date="@newAlbum.Release" />
+                </Field>
+                <Field>
+                    <FieldLabel>Артист</FieldLabel>
+                    <NumericEdit  @bind-Value="@newAlbum.ArtistId" />
+                </Field>
+            </ModalBody>
+
+            <ModalFooter>
+                <Button Color="Blazorise.Color.Secondary" Clicked="CloseAlbumModalAsync">Отмена</Button>
+                <Button Color="Blazorise.Color.Primary" Clicked="CreateAlbumAsync">Создать</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public EventCallback OnAlbumAdded { get; set; }
+
+    private Modal AlbumModal { get; set; } = new();
+
+    private DtoAlbumCreateUpdate newAlbum { get; set; } = new();
+
+    public async Task Show() => await AlbumModal.Show();
+
+    private async Task CloseAlbumModalAsync() => await AlbumModal.Hide();
+
+    private async Task CreateAlbumAsync()
+    {
+        newAlbum.Release = new DateTime(1900, 0, 0, 9, 0, 0);
+        await MediaLibraryApi.PostAlbum(newAlbum);
+        await AlbumModal.Hide();
+        await OnAlbumAdded.InvokeAsync();
+    }
+}

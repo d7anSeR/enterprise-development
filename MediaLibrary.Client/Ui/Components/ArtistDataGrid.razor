@@ -5,24 +5,25 @@
     <CardHeader>
         <Row Class="justify-content-between">
             <Column ColumnSize="ColumnSize.IsAuto">
-                <h2><MudIcon Icon="@Icons.Material.Filled.MusicNote" Class="icon" />  Жанры</h2>
+                
+                <h2><MudIcon Icon="@Icons.Material.Filled.Person2" Class="icon" />  Артисты</h2>
             </Column>
             <Column ColumnSize="ColumnSize.IsAuto">
                 <Button Color="Blazorise.Color.Primary" Clicked="OpenCreateModal">
-                    Добавить жанр
+                    Добавить Артиста
                 </Button>
             </Column>
         </Row>
     </CardHeader>
     <CardBody>
-        <DataGrid TItem="DtoGenreDetails"
-                  Data="_genres"
+        <DataGrid TItem="DtoArtistDetails"
+                  Data="_artists"
                   Responsive
                   Striped>
             <DataGridColumns>
                 <DataGridColumn Width="150px"
-                                TItem="DtoGenreDetails"
-                                Field="@nameof(DtoGenreDetails.Id)"
+                                TItem="DtoArtistDetails"
+                                Field="@nameof(DtoArtistDetails.Id)"
                                 Caption="Действия">
                     <DisplayTemplate>
                         <Dropdown>
@@ -41,58 +42,64 @@
                     </DisplayTemplate>
                 </DataGridColumn>
 
-                <DataGridColumn TItem="DtoGenreDetails"
-                                Field="@nameof(DtoGenreDetails.Name)"
-                                Caption="Название жанра">
+                <DataGridColumn TItem="DtoArtistDetails"
+                                Field="@nameof(DtoArtistDetails.Name)"
+                                Caption="Никнейм артиста">
+                </DataGridColumn>
+                <DataGridColumn TItem="DtoArtistDetails"
+                                Field="@nameof(DtoArtistDetails.Description)"
+                                Caption="Краткое описание">
                 </DataGridColumn>
             </DataGridColumns>
         </DataGrid>
     </CardBody>
 </Card>
 
-<GenreCreateModal @ref="GenreCreateModal" OnGenreAdded="@HandleGenreAdded" />
+<ArtistCreateModal @ref="ArtistCreateModal" OnArtistAdded="@HandleArtistAdded" />
 
 @code {
     [Parameter]
     public EventCallback OnDataChanged { get; set; }
 
-    private List<DtoGenreDetails> _genres = new();
+    private List<DtoArtistDetails> _artists = new();
 
-    private GenreCreateModal GenreCreateModal { get; set; } = new();
 
-    private async Task LoadGenres()
+    private ArtistCreateModal ArtistCreateModal { get; set; } = new();
+
+    private async Task LoadArtists()
     {
-        var response = await MediaLibraryApi.GetAllGenre();
+        var response = await MediaLibraryApi.GetAllArtist();
         if (response != null)
         {
-            _genres = response.ToList();
+            _artists = response.ToList();
         }
     }
 
+
     protected override async Task OnInitializedAsync()
     {
-        await LoadGenres();
+        await LoadArtists();
         await base.OnInitializedAsync();
     }
 
-    private void OpenEditPageAsync(DtoGenreDetails context)
+    private void OpenEditPageAsync(DtoArtistDetails context)
     {
-        NavManager.NavigateTo($"genres/{context.Id}");
+        NavManager.NavigateTo($"artists/{context.Id}");
     }
 
-    private async Task DeleteGradeAsync(DtoGenreDetails context)
+    private async Task DeleteGradeAsync(DtoArtistDetails context)
     {
-        await MediaLibraryApi.DeleteGenre(context.Id);
-        await LoadGenres();
+        await MediaLibraryApi.DeleteArtist(context.Id);
+        await LoadArtists();
         await OnDataChanged.InvokeAsync();
     }
 
-    private async Task HandleGenreAdded()
+    private async Task HandleArtistAdded()
     {
-        await LoadGenres();
+        await LoadArtists();
         await OnDataChanged.InvokeAsync();
     }
 
-    private async Task OpenCreateModal() => await GenreCreateModal.Show();
+    private async Task OpenCreateModal() => await ArtistCreateModal.Show();
 
 }

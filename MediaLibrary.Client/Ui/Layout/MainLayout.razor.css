@@ -75,3 +75,9 @@ main {
         padding-right: 1.5rem !important;
     }
 }
+
+::deep .icon {
+    width: 60px;
+    aspect-ratio: 1;
+    color: #FFFFFF;
+}
